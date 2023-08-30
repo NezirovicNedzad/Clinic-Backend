@@ -28,24 +28,24 @@ namespace Application.Repositories
             _context.Odeljenja.Add(odeljenje);
         }
 
-        public async void DeleteOdeljenje(Guid id)
+        public void DeleteOdeljenje(Guid id)
         {
-            var odeljenje = await _context.Odeljenja.FindAsync(id);
+            var odeljenje =  _context.Odeljenja.Find(id);
 
 
              _context.Remove(odeljenje);
         }
 
-        public async void EditOdeljenje(Guid id,Odeljenje Odeljenje)
+        public  void EditOdeljenje(Guid id,Odeljenje Odeljenje)
         {
-            var odeljenje = await _context.Odeljenja.FindAsync(id);
+            var odeljenje =  _context.Odeljenja.Find(id);
             _mapper.Map(Odeljenje, odeljenje);
 
         }
 
-        public async Task<List<Odeljenje>> GetOdeljenja()
+        public  Task<List<Odeljenje>> GetOdeljenja()
         {
-            return await _context.Odeljenja.ToListAsync();
+            return  _context.Odeljenja.ToListAsync();
         }
 
         public async Task<Odeljenje> GetOdeljenje(Guid id)

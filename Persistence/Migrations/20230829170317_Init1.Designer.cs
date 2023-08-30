@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230814134155_Second")]
-    partial class Second
+    [Migration("20230829170317_Init1")]
+    partial class Init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,41 +44,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Odeljenja");
-                });
-
-            modelBuilder.Entity("Domain.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Ime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDoctor")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsNurse")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("JMBG")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Prezime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Specialization")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Korsinici");
                 });
 #pragma warning restore 612, 618
         }

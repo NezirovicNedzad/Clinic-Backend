@@ -1,6 +1,7 @@
 ﻿using Application.Odeljenja;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -31,7 +32,7 @@ namespace API.Controllers
 
             return await _mediator.Send(new List.Query());
         }
-
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Odeljenje>> GetOdeljenje(Guid id)
         {

@@ -1,6 +1,10 @@
 using API.Extensions;
 using Application.Odeljenja;
+using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -8,13 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 {
     // Add services to the container.
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(opt =>
+    {
+        var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+        opt.Filters.Add(new AuthorizeFilter(policy));//svaki endpoint ce ovim zahtevati autentikaciji
+    });
     builder.Services.AddApplicationServices(builder.Configuration);
-
+    builder.Services.AddIdentityServices(builder.Configuration);
     // Learn more about configuring Swagger/OpenAPI at
 }
 var app = builder.Build();
-{
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
@@ -24,6 +32,7 @@ var app = builder.Build();
 
 
     app.UseCors("CorsPolicy");
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
@@ -32,8 +41,23 @@ var app = builder.Build();
 
     var services = scope.ServiceProvider;
 
-
-
-
-    app.Run();
+/*try
+{
+    var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    await context.Database.MigrateAsync();
+    
+    await Seed.SeedData(context,userManager);
 }
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occured during migration");
+
+}
+
+*/
+
+
+
+app.Run();
