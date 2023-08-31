@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 using Application.Odeljenja;
 using Domain;
 using MediatR;
@@ -21,25 +22,28 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddIdentityServices(builder.Configuration);
     // Learn more about configuring Swagger/OpenAPI at
 }
+
 var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 
-    app.UseCors("CorsPolicy");
-    app.UseAuthentication();
-    app.UseAuthorization();
+app.UseCors("CorsPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
 
-    app.MapControllers();
+app.MapControllers();
 
-    using var scope = app.Services.CreateScope();
+using var scope = app.Services.CreateScope();
 
-    var services = scope.ServiceProvider;
+var services = scope.ServiceProvider;
 
 /*try
 {
@@ -57,7 +61,5 @@ catch (Exception ex)
 }
 
 */
-
-
 
 app.Run();

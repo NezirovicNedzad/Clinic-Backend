@@ -26,8 +26,5 @@ namespace Application.UnitsOfWork
             return await _dataContext.SaveChangesAsync() > 0;
 
         }
-     
-
-     
     }
 }
