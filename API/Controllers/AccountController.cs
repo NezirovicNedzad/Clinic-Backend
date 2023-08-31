@@ -25,12 +25,9 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-
        public async Task<ActionResult<UserDto>>Login(LoginDto loginDto)
         {
-
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
-
 
             if (user == null) return Unauthorized();
 
@@ -38,25 +35,22 @@ namespace API.Controllers
 
             if (result)
             {
-
                 return CreateUserObject(user);
-            
             }
-
 
             return Unauthorized();
         }
+
         [AllowAnonymous]
         [HttpPost("register")]
-
-
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         { 
         
-        if(await _userManager.Users.AnyAsync(x=>x.UserName==registerDto.Username))
+            if(await _userManager.Users.AnyAsync(x=>x.UserName==registerDto.Username))
             {
                 return BadRequest("Username is already taken");
             }
+
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
                 return BadRequest("Email is already taken");
@@ -81,28 +75,18 @@ namespace API.Controllers
             return BadRequest(result.Errors);
         }
 
-
-        
         [HttpGet]
-
         public async Task<ActionResult<UserDto>>GetCurrentUser()
         {
-
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
-
-
-            return CreateUserObject(user);
-        
+            return CreateUserObject(user);        
         }
-
 
         private UserDto CreateUserObject(AppUser user)
         {
             return new UserDto
-
             {
-
                 Image = null,
                 Ime = user.Ime,
                 Token = _tokenService.CreateToken(user),

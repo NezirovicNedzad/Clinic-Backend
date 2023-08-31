@@ -1,30 +1,18 @@
-﻿using Application.UnitsOfWork;
+﻿using Application.Core;
+using Application.UnitsOfWork;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Odeljenja
 {
     public class Delete
     {
-
-
-
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
-         public   Guid Id { get; set; }
+            public Guid Id { get; set; }
         }
 
-
-
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-
             private readonly IUnitOfWork _uof;
 
             public Handler(IUnitOfWork uof)
@@ -32,21 +20,19 @@ namespace Application.Odeljenja
                 _uof = uof;
             }
 
-         
-
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                var odeljenje = await _uof.OdeljenjeRepository.GetOdeljenje(request.Id);
 
+                if (odeljenje == null) return null;
 
                 _uof.OdeljenjeRepository.DeleteOdeljenje(request.Id);
+            
+                var result = await _uof.SaveAsync();
 
-                await _uof.SaveAsync();
+                if (!result) return Result<Unit>.Failure("Failed to delete odeljenje");
 
-
-                return Unit.Value;
-
-
-               
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }
