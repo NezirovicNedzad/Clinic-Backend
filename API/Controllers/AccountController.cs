@@ -63,7 +63,7 @@ namespace API.Controllers
             }
 
             var user = new AppUser
-            {
+            {                
                 Ime = registerDto.Ime,
                 Email=registerDto.Email,
                 Prezime = registerDto.Prezime,
