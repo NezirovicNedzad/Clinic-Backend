@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace API.Controllers
 {
@@ -33,9 +35,13 @@ namespace API.Controllers
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var role = roles[0];
+
             if (result)
             {
-                return CreateUserObject(user);
+                return CreateUserObject(user, role);
             }
 
             return Unauthorized();
@@ -62,12 +68,15 @@ namespace API.Controllers
                 Email=registerDto.Email,
                 Prezime = registerDto.Prezime,
                 UserName = registerDto.Username
+            
             };
 
+            
             IdentityResult result = await _userManager.CreateAsync(user, "Pas$word123");
+            await _userManager.AddToRoleAsync(user, registerDto.Role);
             if (result.Succeeded)
             {
-                return CreateUserObject(user);
+                return CreateUserObject(user,registerDto.Role);
             }
 
             foreach (IdentityError error in result.Errors)
@@ -80,17 +89,26 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
-            return CreateUserObject(user);        
+             return new UserDto
+            {
+                Image = null,
+                Ime = user.Ime,
+                Token = _tokenService.CreateToken(user),
+                Username = user.UserName,
+               
+            };
         }
 
-        private UserDto CreateUserObject(AppUser user)
+        private UserDto CreateUserObject(AppUser user,string role)
         {
             return new UserDto
             {
                 Image = null,
                 Ime = user.Ime,
+                Prezime=user.Prezime,
                 Token = _tokenService.CreateToken(user),
-                Username = user.UserName
+                Username = user.UserName,
+                Role = role
             };
         }
     }

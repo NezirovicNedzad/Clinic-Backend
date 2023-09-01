@@ -1,6 +1,7 @@
 ﻿using API.Services;
 using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using System.Text;
@@ -18,8 +19,8 @@ namespace API.Extensions
 
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.User.RequireUniqueEmail = true;
-              
-            }).AddEntityFrameworkStores<DataContext>();
+
+            }).AddRoles<IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
@@ -33,6 +34,8 @@ namespace API.Extensions
                     ValidateAudience = false
                 };
             });
+
+            
             services.AddScoped<TokenService>();
             return services;
         }
