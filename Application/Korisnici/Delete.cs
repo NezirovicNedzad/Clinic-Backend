@@ -1,24 +1,19 @@
 ﻿using Application.Core;
 using Application.UnitsOfWork;
-using Domain;
-using FluentValidation;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Odeljenja
+namespace Application.Korisnici
 {
-    public class Create
+    public class Delete
     {
         public class Command : IRequest<Result<Unit>>
         {
-            public Odeljenje Odeljenje { get; set; }
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Odeljenje).SetValidator(new OdeljenjaValidator());
-            }
+            public string Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -32,11 +27,15 @@ namespace Application.Odeljenja
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                _uof.OdeljenjeRepository.CreateOdeljenje(request.Odeljenje);
+                var user = await _uof.KorisniciRepository.GetUser(request.Id);
+
+                if (user == null) return null;
+
+                _uof.KorisniciRepository.AdminDeleteUser(request.Id);
 
                 var result = await _uof.SaveAsync();
 
-                if (!result) return Result<Unit>.Failure("Failed to create odeljenje");
+                if (!result) return Result<Unit>.Failure("Failed to delete user");
 
                 return Result<Unit>.Success(Unit.Value);
             }

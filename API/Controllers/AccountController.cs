@@ -1,6 +1,9 @@
 ﻿using API.DTOs;
 using API.Services;
+using Application.Korisnici;
 using Domain;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,24 +14,28 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace API.Controllers
 {
-    
+
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenService;
+        private readonly IMediator _mediator;
 
-        public AccountController(UserManager<AppUser> userManager,TokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, IMediator mediator)
         {
-            _userManager= userManager;
+            _userManager = userManager;
             _tokenService = tokenService;
+            _mediator = mediator;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-       public async Task<ActionResult<UserDto>>Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
+
+
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null) return Unauthorized();
@@ -37,22 +44,30 @@ namespace API.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var role = roles[0];
+            var role = roles.FirstOrDefault();
 
             if (result)
             {
-                return CreateUserObject(user, role);
+                if (role == "Admin")
+                {
+                    return CreateUserObject(user, role);
+                }
+                else
+                {
+                    return Unauthorized("Samo administratori mogu da izvrše ovu akciju.");
+                }
             }
 
             return Unauthorized();
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("AdminCreateUser")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
-        { 
-        
-            if(await _userManager.Users.AnyAsync(x=>x.UserName==registerDto.Username))
+        {
+            
+
+            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
             {
                 return BadRequest("Username is already taken");
             }
@@ -63,52 +78,77 @@ namespace API.Controllers
             }
 
             var user = new AppUser
-            {                
+            {
                 Ime = registerDto.Ime,
-                Email=registerDto.Email,
+                Email = registerDto.Email,
                 Prezime = registerDto.Prezime,
                 UserName = registerDto.Username
-            
             };
 
-            
-            IdentityResult result = await _userManager.CreateAsync(user, "Pas$word123");
-            await _userManager.AddToRoleAsync(user, registerDto.Role);
+            IdentityResult result = await _userManager.CreateAsync(user, registerDto.Password);
+
             if (result.Succeeded)
             {
-                return CreateUserObject(user,registerDto.Role);
+                await _userManager.AddToRoleAsync(user, registerDto.Role);
+
+                return CreateUserObject(user, registerDto.Role);
             }
 
             foreach (IdentityError error in result.Errors)
-                Console.WriteLine($"Opps!{error.Description}");
+                Console.WriteLine($"Opps! {error.Description}");
             return BadRequest(result.Errors);
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<UserDto>>GetCurrentUser()
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
-             return new UserDto
+            return new UserDto
             {
                 Image = null,
                 Ime = user.Ime,
+                Email= user.Email,
                 Token = _tokenService.CreateToken(user),
                 Username = user.UserName,
-               
             };
         }
 
-        private UserDto CreateUserObject(AppUser user,string role)
+        [HttpGet("GetAllUsers")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUsers()
+        {
+            return HandleResult(await _mediator.Send(new List.Query()));
+        }
+
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            return HandleResult(await _mediator.Send(new Details.Query { Id = id }));
+        }
+
+        [HttpDelete("AdminDeleteUser")]
+        [Authorize(Policy = "AdminOnly")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AdminDeleteUser(string id)
+        {
+            return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));
+        }
+
+        private UserDto CreateUserObject(AppUser user, string role)
         {
             return new UserDto
             {
                 Image = null,
                 Ime = user.Ime,
-                Prezime=user.Prezime,
+                Prezime = user.Prezime,
                 Token = _tokenService.CreateToken(user),
                 Username = user.UserName,
-                Role = role
+                Role = role,
+                Email = user.Email
             };
         }
     }

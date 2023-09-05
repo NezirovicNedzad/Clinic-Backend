@@ -15,9 +15,6 @@ namespace Persistence
         {
         }
 
-      
-       
-       public DbSet<Odeljenje>Odeljenja { get; set; } 
-       
+       public DbSet<Odeljenje>Odeljenja { get; set; }   
     }
 }

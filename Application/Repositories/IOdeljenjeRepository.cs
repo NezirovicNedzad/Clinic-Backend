@@ -11,9 +11,11 @@ namespace Application.Repositories
     public interface IOdeljenjeRepository 
     {
         Task<List<Odeljenje>> GetOdeljenja();
+        
         Task<Odeljenje> GetOdeljenje(Guid id);
 
         void CreateOdeljenje(Odeljenje odeljenje);
+        
         void EditOdeljenje(Guid id,Odeljenje Odeljenje);
 
         void DeleteOdeljenje(Guid id);
