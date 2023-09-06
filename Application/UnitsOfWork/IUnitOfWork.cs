@@ -10,8 +10,7 @@ namespace Application.UnitsOfWork
    public interface IUnitOfWork
     {
         IOdeljenjeRepository OdeljenjeRepository { get; }
-
+        IKorisniciRepository KorisniciRepository { get; }
         Task<bool> SaveAsync();
-
     }
 }

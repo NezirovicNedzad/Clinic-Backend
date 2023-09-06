@@ -21,10 +21,11 @@ namespace Application.UnitsOfWork
 
         public IOdeljenjeRepository OdeljenjeRepository => new OdeljenjeRepository(_dataContext,_mapper);
 
+        public IKorisniciRepository KorisniciRepository => new KorisniciRepository(_dataContext);
+
         public async Task<bool> SaveAsync()
         {
             return await _dataContext.SaveChangesAsync() > 0;
-
         }
     }
 }

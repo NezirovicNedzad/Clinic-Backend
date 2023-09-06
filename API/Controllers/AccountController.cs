@@ -1,6 +1,9 @@
 ﻿using API.DTOs;
 using API.Services;
+using Application.Korisnici;
 using Domain;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +15,10 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace API.Controllers
 {
-    
+
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenService;
@@ -24,14 +27,17 @@ namespace API.Controllers
         public AccountController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context)
         {
             _userManager = userManager;
+            _userManager = userManager;
             _tokenService = tokenService;
             _context = context;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-       public async Task<ActionResult<UserDto>>Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
+
+
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null) return Unauthorized();
@@ -66,12 +72,13 @@ namespace API.Controllers
             return Unauthorized();
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("AdminCreateUser")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
-        { 
-        
-            if(await _userManager.Users.AnyAsync(x=>x.UserName==registerDto.Username))
+        {
+            
+
+            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
             {
                 return BadRequest("Username is already taken");
             }
@@ -86,7 +93,7 @@ Guid g=new Guid(registerDto.OdeljenjeId);
             var Odeljenje= await _context.Odeljenja.FindAsync(g);
 
             var user = new AppUser
-            {                
+            {
                 Ime = registerDto.Ime,
                 Odeljenje=Odeljenje,     
                 Email=registerDto.Email,
@@ -115,22 +122,24 @@ Guid g=new Guid(registerDto.OdeljenjeId);
             }
 
             foreach (IdentityError error in result.Errors)
-                Console.WriteLine($"Opps!{error.Description}");
+                Console.WriteLine($"Opps! {error.Description}");
             return BadRequest(result.Errors);
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<UserDto>>GetCurrentUser()
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
-             return new UserDto
+            return new UserDto
             {
                 Image = null,
                 Ime = user.Ime,
+                Email= user.Email,
                 Token = _tokenService.CreateToken(user),
                 Username = user.UserName,
-               
             };
         }
 
