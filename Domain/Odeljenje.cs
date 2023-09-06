@@ -11,5 +11,7 @@ namespace Domain
         public int BrojKreveta { get; set; }
 
         public int BrojPacijenata { get; set; }
-    }
+
+        public ICollection<AppUser> Osoblje {get; set; } 
+     }
 }

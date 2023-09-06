@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Domain;
 
 namespace API.DTOs
 {
@@ -11,7 +12,7 @@ namespace API.DTOs
 
 
         [Required]
-        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$",ErrorMessage ="Password must be complex")]
+        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,16}$",ErrorMessage ="Password must be complex")]
 
         public string Password { get; set; }
 
@@ -20,5 +21,8 @@ namespace API.DTOs
         public string Prezime { get; set; }
         [Required]
         public string Username { get; set; }
+        
+        public string OdeljenjeId { get; set; }    
+
     }
 }
