@@ -23,13 +23,18 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenService;
   
-       private readonly DataContext _context;
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context)
+        private readonly DataContext _context;
+        private readonly IMediator _mediator;
+
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context, IMediator mediator)
+
+
         {
             _userManager = userManager;
             _userManager = userManager;
             _tokenService = tokenService;
             _context = context;
+            _mediator = mediator;
         }
 
         [AllowAnonymous]
@@ -73,7 +78,7 @@ namespace API.Controllers
         }
 
         [HttpPost("AdminCreateUser")]
-        [Authorize(Policy = "AdminOnly")]
+            [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             
@@ -89,7 +94,7 @@ namespace API.Controllers
             }
 
 
-Guid g=new Guid(registerDto.OdeljenjeId);
+            Guid g=new Guid(registerDto.OdeljenjeId);
             var Odeljenje= await _context.Odeljenja.FindAsync(g);
 
             var user = new AppUser
@@ -143,17 +148,39 @@ Guid g=new Guid(registerDto.OdeljenjeId);
             };
         }
 
-        private UserDto CreateUserObject(AppUser user,string role)
-        {
-            return new UserDto
-            {
-                Image = null,
-                Ime = user.Ime,
-                Prezime=user.Prezime,
-                Token = _tokenService.CreateToken(user),
-                Username = user.UserName,
-                Role = role
-            };
-        }
+      [HttpDelete("AdminDeleteUser")]
+      [AllowAnonymous]
+
+
+
+      public async Task<IActionResult> AdminDelteUser(string id)
+     {
+
+        return HandleResult(await _mediator.Send(new Delete.Command{Id=id}));
+
+     }
+
+
+
+       [HttpGet("GetAllUsers")]
+       [AllowAnonymous]
+        public async Task<IActionResult> GetUsers()
+     {
+
+        return HandleResult(await _mediator.Send(new List.Query()));
+
+     }
+
+
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUser(string id)
+     {
+
+        return HandleResult(await _mediator.Send(new Details.Query{Id=id}));    
+
+     }
+
+
     }
 }
