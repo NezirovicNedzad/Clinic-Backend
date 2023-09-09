@@ -66,6 +66,7 @@ namespace API.Controllers
                 Token = _tokenService.CreateToken(user),
                 Username =user.UserName,
                 Role=role,
+                Email=user.Email,
                 Prezime=user.Prezime,
                 OdeljenjeId=Odeljenje.Id.ToString(),    
                 
@@ -119,6 +120,7 @@ namespace API.Controllers
                 Token = _tokenService.CreateToken(user),
                 Username = registerDto.Username,
                 Role=registerDto.Role,
+           Email=registerDto.Email, 
                 Prezime=registerDto.Prezime,
                 OdeljenjeId=registerDto.OdeljenjeId
                
