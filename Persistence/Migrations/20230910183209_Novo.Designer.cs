@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230905002628_RelationsEf1ton")]
-    partial class RelationsEf1ton
+    [Migration("20230910183209_Novo")]
+    partial class Novo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,6 +101,38 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Karton", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Dijagnoza")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LekarId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("OdeljenjeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PacijentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Terapija")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LekarId");
+
+                    b.HasIndex("OdeljenjeId");
+
+                    b.HasIndex("PacijentId");
+
+                    b.ToTable("Kartoni");
+                });
+
             modelBuilder.Entity("Domain.Odeljenje", b =>
                 {
                     b.Property<Guid>("Id")
@@ -119,6 +151,32 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Odeljenja");
+                });
+
+            modelBuilder.Entity("Domain.Pacijent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BrojGodina")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JMBG")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prezime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pacijenti");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -257,8 +315,27 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
                     b.HasOne("Domain.Odeljenje", "Odeljenje")
-                        .WithMany("Lekari")
+                        .WithMany("Osoblje")
                         .HasForeignKey("OdeljenjeId");
+
+                    b.Navigation("Odeljenje");
+                });
+
+            modelBuilder.Entity("Domain.Karton", b =>
+                {
+                    b.HasOne("Domain.AppUser", "Lekar")
+                        .WithMany("Kartoni")
+                        .HasForeignKey("LekarId");
+
+                    b.HasOne("Domain.Odeljenje", "Odeljenje")
+                        .WithMany("Kartoni")
+                        .HasForeignKey("OdeljenjeId");
+
+                    b.HasOne("Domain.Pacijent", null)
+                        .WithMany("Kartoni")
+                        .HasForeignKey("PacijentId");
+
+                    b.Navigation("Lekar");
 
                     b.Navigation("Odeljenje");
                 });
@@ -314,9 +391,21 @@ namespace Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.AppUser", b =>
+                {
+                    b.Navigation("Kartoni");
+                });
+
             modelBuilder.Entity("Domain.Odeljenje", b =>
                 {
-                    b.Navigation("Lekari");
+                    b.Navigation("Kartoni");
+
+                    b.Navigation("Osoblje");
+                });
+
+            modelBuilder.Entity("Domain.Pacijent", b =>
+                {
+                    b.Navigation("Kartoni");
                 });
 #pragma warning restore 612, 618
         }

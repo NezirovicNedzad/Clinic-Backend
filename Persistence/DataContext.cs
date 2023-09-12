@@ -18,6 +18,18 @@ namespace Persistence
       
        
        public DbSet<Odeljenje>Odeljenja { get; set; } 
-       
+    
+
+
+
+public DbSet<Karton> Kartoni{get;set;}
+       public DbSet<Pacijent>Pacijenti{get; set;}
+
+
+
+
+     
+
+
     }
 }

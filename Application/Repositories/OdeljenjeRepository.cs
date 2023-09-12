@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,12 +8,15 @@ namespace Application.Repositories
 {
     public class OdeljenjeRepository : IOdeljenjeRepository
     {
+
+ private readonly UserManager<AppUser> _userManager;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        public OdeljenjeRepository(DataContext context, IMapper mapper )
+        public OdeljenjeRepository(DataContext context, IMapper mapper, UserManager<AppUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async void CreateOdeljenje(Odeljenje odeljenje)
@@ -20,9 +24,9 @@ namespace Application.Repositories
             await _context.Odeljenja.AddAsync(odeljenje);
         }
 
-        public void DeleteOdeljenje(Guid id)
+        public async Task DeleteOdeljenjeAsync(Guid id)
         {
-            var odeljenje =  _context.Odeljenja.Find(id);
+            var odeljenje = await  _context.Odeljenja.FindAsync(id);
 
             _context.Remove(odeljenje);
         }
@@ -41,7 +45,10 @@ namespace Application.Repositories
 
         public async Task<Odeljenje> GetOdeljenje(Guid id)
         {
-            return await _context.Odeljenja.FindAsync(id);
+ 
+Odeljenje odeljenje=await _context.Odeljenja.FindAsync(id);
+
+            return  odeljenje;
         }
     }
 }

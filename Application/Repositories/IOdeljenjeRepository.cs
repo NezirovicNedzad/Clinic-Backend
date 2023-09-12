@@ -18,6 +18,6 @@ namespace Application.Repositories
         
         void EditOdeljenje(Guid id,Odeljenje Odeljenje);
 
-        void DeleteOdeljenje(Guid id);
+         Task DeleteOdeljenjeAsync(Guid id);
     }
 }

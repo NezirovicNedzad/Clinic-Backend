@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers(opt =>
     {
         var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-        opt.Filters.Add(new AuthorizeFilter(policy));//svaki endpoint ce ovim zahtevati autentikaciji
+        opt.Filters.Add(new AuthorizeFilter(policy));//svaki endpoint ce ovim zahtevati autentikaciju
     });
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddIdentityServices(builder.Configuration);

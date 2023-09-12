@@ -13,5 +13,11 @@ namespace Domain
         public int BrojPacijenata { get; set; }
 
         public ICollection<AppUser> Osoblje {get; set; } 
+
+        public ICollection<Karton> Kartoni {get ;set;}
+
+        public ICollection<Pacijent>Pacijenti{get;set;}
+
+
      }
 }

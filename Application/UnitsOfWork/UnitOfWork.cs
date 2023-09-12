@@ -1,5 +1,7 @@
 ﻿using Application.Repositories;
 using AutoMapper;
+using Domain;
+using Microsoft.AspNetCore.Identity;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -13,15 +15,20 @@ namespace Application.UnitsOfWork
     {
         private readonly DataContext _dataContext;
         private readonly IMapper _mapper;
-        public UnitOfWork(DataContext dataContext, IMapper mapper)
+        
+         private readonly UserManager<AppUser> _userManager;
+        public UnitOfWork(DataContext dataContext, IMapper mapper, UserManager<AppUser> userManager)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
-        public IOdeljenjeRepository OdeljenjeRepository => new OdeljenjeRepository(_dataContext,_mapper);
+        public IOdeljenjeRepository OdeljenjeRepository => new OdeljenjeRepository(_dataContext,_mapper,_userManager);
 
         public IKorisniciRepository KorisniciRepository => new KorisniciRepository(_dataContext);
+
+        public IPacijentRepository PacijentRepository => new PacijentRepository(_dataContext,_userManager);
 
         public async Task<bool> SaveAsync()
         {

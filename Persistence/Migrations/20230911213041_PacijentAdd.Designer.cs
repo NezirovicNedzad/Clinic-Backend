@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230829171541_Init2")]
-    partial class Init2
+    [Migration("20230911213041_PacijentAdd")]
+    partial class PacijentAdd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,6 @@ namespace Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Ime")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -62,6 +61,9 @@ namespace Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<Guid?>("OdeljenjeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -72,7 +74,6 @@ namespace Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Prezime")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -95,7 +96,41 @@ namespace Persistence.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("OdeljenjeId");
+
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Karton", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Dijagnoza")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LekarId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("OdeljenjeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PacijentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Terapija")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LekarId");
+
+                    b.HasIndex("OdeljenjeId");
+
+                    b.HasIndex("PacijentId");
+
+                    b.ToTable("Kartoni");
                 });
 
             modelBuilder.Entity("Domain.Odeljenje", b =>
@@ -111,12 +146,42 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Naziv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Odeljenja");
+                });
+
+            modelBuilder.Entity("Domain.Pacijent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BrojGodina")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JMBG")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OdeljenjeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Pol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prezime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OdeljenjeId");
+
+                    b.ToTable("Pacijenti");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -252,6 +317,43 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.AppUser", b =>
+                {
+                    b.HasOne("Domain.Odeljenje", "Odeljenje")
+                        .WithMany("Osoblje")
+                        .HasForeignKey("OdeljenjeId");
+
+                    b.Navigation("Odeljenje");
+                });
+
+            modelBuilder.Entity("Domain.Karton", b =>
+                {
+                    b.HasOne("Domain.AppUser", "Lekar")
+                        .WithMany("Kartoni")
+                        .HasForeignKey("LekarId");
+
+                    b.HasOne("Domain.Odeljenje", "Odeljenje")
+                        .WithMany("Kartoni")
+                        .HasForeignKey("OdeljenjeId");
+
+                    b.HasOne("Domain.Pacijent", null)
+                        .WithMany("Kartoni")
+                        .HasForeignKey("PacijentId");
+
+                    b.Navigation("Lekar");
+
+                    b.Navigation("Odeljenje");
+                });
+
+            modelBuilder.Entity("Domain.Pacijent", b =>
+                {
+                    b.HasOne("Domain.Odeljenje", "Odeljenje")
+                        .WithMany("Pacijenti")
+                        .HasForeignKey("OdeljenjeId");
+
+                    b.Navigation("Odeljenje");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -301,6 +403,25 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.AppUser", b =>
+                {
+                    b.Navigation("Kartoni");
+                });
+
+            modelBuilder.Entity("Domain.Odeljenje", b =>
+                {
+                    b.Navigation("Kartoni");
+
+                    b.Navigation("Osoblje");
+
+                    b.Navigation("Pacijenti");
+                });
+
+            modelBuilder.Entity("Domain.Pacijent", b =>
+                {
+                    b.Navigation("Kartoni");
                 });
 #pragma warning restore 612, 618
         }

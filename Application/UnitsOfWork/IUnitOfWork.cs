@@ -11,6 +11,8 @@ namespace Application.UnitsOfWork
     {
         IOdeljenjeRepository OdeljenjeRepository { get; }
         IKorisniciRepository KorisniciRepository { get; }
+
+        IPacijentRepository PacijentRepository{get;}
         Task<bool> SaveAsync();
     }
 }

@@ -13,5 +13,7 @@ namespace Domain
         public string Prezime { get; set; }   
 
         public Odeljenje Odeljenje {get; set;} 
+
+        public ICollection<Karton> Kartoni {get; set;}
     }
 }

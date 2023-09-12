@@ -26,7 +26,7 @@ namespace Application.Odeljenja
 
                 if (odeljenje == null) return null;
 
-                _uof.OdeljenjeRepository.DeleteOdeljenje(request.Id);
+            await     _uof.OdeljenjeRepository.DeleteOdeljenjeAsync(request.Id);
             
                 var result = await _uof.SaveAsync();
 
