@@ -1,13 +1,8 @@
 using API.Extensions;
 using API.Middleware;
-using Application.Odeljenja;
-using Domain;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -61,7 +56,7 @@ using (var scope = app.Services.CreateScope())
 
 }
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
@@ -152,7 +147,7 @@ var userApp = new AppUser
 };
 var uloge = userManager2.GetRolesAsync(userApp);
 var Sestra = userManager2.IsInRoleAsync(userApp, "Sestra");
-
+*/
 
 /*try
 {

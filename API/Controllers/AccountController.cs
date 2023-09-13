@@ -87,6 +87,7 @@ namespace API.Controllers
                 Odeljenje = Odeljenje,
                 Email = registerDto.Email,
                 Prezime = registerDto.Prezime,
+                Role = registerDto.Role,
                 UserName = registerDto.Username,
                 Specijalizacija = registerDto.Specijalizacija,
             };
@@ -129,6 +130,7 @@ namespace API.Controllers
                 Email = user.Email,
                 Token = _tokenService.CreateToken(user),
                 Username = user.UserName,
+                OdeljenjeId = user.Odeljenje.Id.ToString(),
                 Specijalizacija = user.Specijalizacija,
             };
         }
