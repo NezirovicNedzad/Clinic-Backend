@@ -76,6 +76,9 @@ namespace Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Specijalizacija")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -143,6 +146,9 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpecijalizacijaNaziv")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

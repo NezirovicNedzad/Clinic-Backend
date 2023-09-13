@@ -9,7 +9,7 @@
         public string Role { get; set; }
         public string Image { get; set; }
         public string Username { get; set; }
-
+        public string Specijalizacija { get; set; }
         public string OdeljenjeId{get;set;}
 
        

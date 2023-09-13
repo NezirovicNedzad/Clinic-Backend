@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230910183209_Novo")]
-    partial class Novo
+    [Migration("20230912173911_specijalizacija")]
+    partial class specijalizacija
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,6 +77,9 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specijalizacija")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -148,6 +151,9 @@ namespace Persistence.Migrations
                     b.Property<string>("Naziv")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SpecijalizacijaNaziv")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Odeljenja");
@@ -168,6 +174,9 @@ namespace Persistence.Migrations
                     b.Property<string>("JMBG")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("OdeljenjeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Pol")
                         .HasColumnType("nvarchar(max)");
 
@@ -175,6 +184,8 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OdeljenjeId");
 
                     b.ToTable("Pacijenti");
                 });
@@ -340,6 +351,15 @@ namespace Persistence.Migrations
                     b.Navigation("Odeljenje");
                 });
 
+            modelBuilder.Entity("Domain.Pacijent", b =>
+                {
+                    b.HasOne("Domain.Odeljenje", "Odeljenje")
+                        .WithMany("Pacijenti")
+                        .HasForeignKey("OdeljenjeId");
+
+                    b.Navigation("Odeljenje");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -401,6 +421,8 @@ namespace Persistence.Migrations
                     b.Navigation("Kartoni");
 
                     b.Navigation("Osoblje");
+
+                    b.Navigation("Pacijenti");
                 });
 
             modelBuilder.Entity("Domain.Pacijent", b =>

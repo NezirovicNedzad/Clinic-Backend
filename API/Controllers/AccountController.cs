@@ -22,15 +22,12 @@ namespace API.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenService;
-  
+
         private readonly DataContext _context;
         private readonly IMediator _mediator;
 
         public AccountController(UserManager<AppUser> userManager, TokenService tokenService, DataContext context, IMediator mediator)
-
-
         {
-            _userManager = userManager;
             _userManager = userManager;
             _tokenService = tokenService;
             _context = context;
@@ -48,30 +45,29 @@ namespace API.Controllers
             if (user == null) return Unauthorized();
 
 
-            var Odeljenje=await _context.Odeljenja.Where(s=>s.Osoblje.Contains(user)).FirstOrDefaultAsync();  
+            var Odeljenje = await _context.Odeljenja.Where(s => s.Osoblje.Contains(user)).FirstOrDefaultAsync();
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            
-          
+
+
             var role = roles[0];
 
             if (result)
             {
-                 return new UserDto{
-                Image = null,
-                Ime = user.Ime,
-                Token = _tokenService.CreateToken(user),
-                Username =user.UserName,
-                Role=role,
-                Email=user.Email,
-                Prezime=user.Prezime,
-                OdeljenjeId=Odeljenje.Id.ToString(),    
-                
-               
-
+                return new UserDto
+                {
+                    Image = null,
+                    Ime = user.Ime,
+                    Token = _tokenService.CreateToken(user),
+                    Username = user.UserName,
+                    Role = role,
+                    Email = user.Email,
+                    Prezime = user.Prezime,
+                    OdeljenjeId = Odeljenje.Id.ToString(),
+                    Specijalizacija = user.Specijalizacija,
                 };
             }
 
@@ -79,52 +75,38 @@ namespace API.Controllers
         }
 
         [HttpPost("AdminCreateUser")]
-            [AllowAnonymous]
+        [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            
-
-            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
-            {
-                return BadRequest("Username is already taken");
-            }
-
-            if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
-            {
-                return BadRequest("Email is already taken");
-            }
-
-
-            Guid g=new Guid(registerDto.OdeljenjeId);
-            var Odeljenje= await _context.Odeljenja.FindAsync(g);
+            Guid g = new Guid(registerDto.OdeljenjeId);
+            var Odeljenje = await _context.Odeljenja.FindAsync(g);
 
             var user = new AppUser
             {
                 Ime = registerDto.Ime,
-                Odeljenje=Odeljenje,     
-                Email=registerDto.Email,
+                Odeljenje = Odeljenje,
+                Email = registerDto.Email,
                 Prezime = registerDto.Prezime,
-                UserName = registerDto.Username
-                
-            
+                UserName = registerDto.Username,
+                Specijalizacija = registerDto.Specijalizacija,
             };
 
-            
+
             IdentityResult result = await _userManager.CreateAsync(user, registerDto.Password);
             await _userManager.AddToRoleAsync(user, registerDto.Role);
             if (result.Succeeded)
             {
-                return new UserDto{
-                Image = null,
-                Ime = registerDto.Ime,
-                Token = _tokenService.CreateToken(user),
-                Username = registerDto.Username,
-                Role=registerDto.Role,
-           Email=registerDto.Email, 
-                Prezime=registerDto.Prezime,
-                OdeljenjeId=registerDto.OdeljenjeId
-               
-
+                return new UserDto
+                {
+                    Image = null,
+                    Ime = registerDto.Ime,
+                    Token = _tokenService.CreateToken(user),
+                    Username = registerDto.Username,
+                    Role = registerDto.Role,
+                    Email = registerDto.Email,
+                    Prezime = registerDto.Prezime,
+                    OdeljenjeId = registerDto.OdeljenjeId,
+                    Specijalizacija = registerDto.Specijalizacija,
                 };
             }
 
@@ -144,44 +126,45 @@ namespace API.Controllers
             {
                 Image = null,
                 Ime = user.Ime,
-                Email= user.Email,
+                Email = user.Email,
                 Token = _tokenService.CreateToken(user),
                 Username = user.UserName,
+                Specijalizacija = user.Specijalizacija,
             };
         }
 
-      [HttpDelete("AdminDeleteUser")]
-      [AllowAnonymous]
+        [HttpDelete("AdminDeleteUser")]
+        [AllowAnonymous]
 
 
 
-      public async Task<IActionResult> AdminDelteUser(string id)
-     {
+        public async Task<IActionResult> AdminDelteUser(string id)
+        {
 
-        return HandleResult(await _mediator.Send(new Delete.Command{Id=id}));
+            return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));
 
-     }
+        }
 
 
 
-       [HttpGet("GetAllUsers")]
-       [AllowAnonymous]
+        [HttpGet("GetAllUsers")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUsers()
-     {
+        {
 
-        return HandleResult(await _mediator.Send(new List.Query()));
+            return HandleResult(await _mediator.Send(new List.Query()));
 
-     }
+        }
 
 
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetUser(string id)
-     {
+        {
 
-        return HandleResult(await _mediator.Send(new Details.Query{Id=id}));    
+            return HandleResult(await _mediator.Send(new Details.Query { Id = id }));
 
-     }
+        }
 
 
     }

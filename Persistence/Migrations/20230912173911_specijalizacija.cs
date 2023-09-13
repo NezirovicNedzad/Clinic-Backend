@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Novo : Migration
+    public partial class specijalizacija : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,28 +31,13 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Naziv = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecijalizacijaNaziv = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BrojKreveta = table.Column<int>(type: "int", nullable: false),
                     BrojPacijenata = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Odeljenja", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pacijenti",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    JMBG = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BrojGodina = table.Column<int>(type: "int", nullable: false),
-                    Pol = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pacijenti", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +68,7 @@ namespace Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Ime = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Prezime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Specijalizacija = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OdeljenjeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -104,6 +90,28 @@ namespace Persistence.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Odeljenja_OdeljenjeId",
+                        column: x => x.OdeljenjeId,
+                        principalTable: "Odeljenja",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pacijenti",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JMBG = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BrojGodina = table.Column<int>(type: "int", nullable: false),
+                    Pol = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OdeljenjeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pacijenti", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pacijenti_Odeljenja_OdeljenjeId",
                         column: x => x.OdeljenjeId,
                         principalTable: "Odeljenja",
                         principalColumn: "Id");
@@ -283,6 +291,11 @@ namespace Persistence.Migrations
                 name: "IX_Kartoni_PacijentId",
                 table: "Kartoni",
                 column: "PacijentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pacijenti_OdeljenjeId",
+                table: "Pacijenti",
+                column: "OdeljenjeId");
         }
 
         /// <inheritdoc />

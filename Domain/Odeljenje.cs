@@ -7,6 +7,7 @@ namespace Domain
         public Guid Id { get; set; }
 
         public string Naziv { get; set; }
+        public string SpecijalizacijaNaziv { get; set; }
 
         public int BrojKreveta { get; set; }
 
