@@ -24,9 +24,9 @@ namespace Application.Odeljenja
             {
                 var odeljenje = await _uof.OdeljenjeRepository.GetOdeljenje(request.Id);
 
-                if (odeljenje == null) return null;
+                if (odeljenje == null) return Result<Unit>.Failure("Odeljenje not found");
 
-            await     _uof.OdeljenjeRepository.DeleteOdeljenjeAsync(request.Id);
+                await _uof.OdeljenjeRepository.DeleteOdeljenjeAsync(request.Id);
             
                 var result = await _uof.SaveAsync();
 

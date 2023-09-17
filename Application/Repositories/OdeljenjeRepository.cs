@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using Application.Core;
+using AutoMapper;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -18,8 +20,7 @@ namespace Application.Repositories
             _mapper = mapper;
             _userManager = userManager;
         }
-
-        public async void CreateOdeljenje(Odeljenje odeljenje)
+        public async Task CreateOdeljenje(Odeljenje odeljenje)
         {
             await _context.Odeljenja.AddAsync(odeljenje);
         }
@@ -31,7 +32,7 @@ namespace Application.Repositories
             _context.Remove(odeljenje);
         }
 
-        public async void EditOdeljenje(Guid id,Odeljenje Odeljenje)
+        public async Task EditOdeljenje(Guid id,Odeljenje Odeljenje)
         {
             var odeljenje = await _context.Odeljenja.FindAsync(id);
             _mapper.Map(Odeljenje, odeljenje);
@@ -46,7 +47,7 @@ namespace Application.Repositories
         public async Task<Odeljenje> GetOdeljenje(Guid id)
         {
  
-Odeljenje odeljenje=await _context.Odeljenja.FindAsync(id);
+            Odeljenje odeljenje=await _context.Odeljenja.FindAsync(id);
 
             return  odeljenje;
         }

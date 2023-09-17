@@ -32,7 +32,7 @@ namespace Application.Odeljenja
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                _uof.OdeljenjeRepository.CreateOdeljenje(request.Odeljenje);
+                await _uof.OdeljenjeRepository.CreateOdeljenje(request.Odeljenje);
 
                 var result = await _uof.SaveAsync();
 
