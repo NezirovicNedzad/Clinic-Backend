@@ -15,7 +15,6 @@ namespace Domain
 
         public ICollection<AppUser> Osoblje {get; set; } 
 
-        public ICollection<Karton> Kartoni {get ;set;}
 
         public ICollection<Pacijent>Pacijenti{get;set;}
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230922231805_AddedTime")]
+    partial class AddedTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,8 +233,8 @@ namespace Persistence.Migrations
                     b.Property<string>("Terapija")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("VremePregleda")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("VremePregleda")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

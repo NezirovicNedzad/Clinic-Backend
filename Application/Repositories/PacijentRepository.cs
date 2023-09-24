@@ -35,13 +35,15 @@ await _context.Pacijenti.AddAsync(pacijent);
         public async Task DeletePacijentAsync(Guid id)
         {
                       var pacijent = await  _context.Pacijenti.FindAsync(id);
-
+                      Odeljenje odeljenje=await _context.Odeljenja.Where(x=>x.Pacijenti.Contains(pacijent)).FirstAsync();
+                        odeljenje.BrojPacijenata=odeljenje.BrojPacijenata-1;
+           
             _context.Remove(pacijent);
         }
 
         public async Task<Pacijent> GetPacijent(Guid id)
         {
-             return await _context.Pacijenti.Where(p=>p.Id==id).Include(n=>n.Kartoni).FirstAsync();
+             return await _context.Pacijenti.Where(p=>p.Id==id).Include(l=>l.Lekar).FirstAsync();
         }
 
         public async Task<List<Pacijent>> GetPacijentiPoOdeljenju(Odeljenje odeljenje)

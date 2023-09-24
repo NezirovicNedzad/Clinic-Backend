@@ -1,8 +1,11 @@
 using API.Extensions;
 using API.Middleware;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -38,6 +41,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 using (var scope = app.Services.CreateScope()) 
+/*
 {
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -56,7 +60,7 @@ using (var scope = app.Services.CreateScope())
 
 }
 
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
@@ -147,9 +151,9 @@ var userApp = new AppUser
 };
 var uloge = userManager2.GetRolesAsync(userApp);
 var Sestra = userManager2.IsInRoleAsync(userApp, "Sestra");
-*/
 
-/*try
+
+try
 {
     var context = services.GetRequiredService<DataContext>();
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
@@ -163,8 +167,8 @@ catch (Exception ex)
     logger.LogError(ex, "An error occured during migration");
 
 }
-
 */
+
 
 app.Run();
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class specijalizacija : Migration
+    public partial class Alltogehter : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -68,6 +68,7 @@ namespace Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Ime = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Prezime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specijalizacija = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OdeljenjeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

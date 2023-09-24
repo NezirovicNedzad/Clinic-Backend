@@ -16,7 +16,7 @@ namespace API.DTOs
         public int BrojGodina{get;set;}
         public string Pol{get;set;}
 
-        public int IdLekara{get;set;}
+        public Guid IdLekara{get;set;}
         public Guid IdOdeljenja{get;set;}
        
     }

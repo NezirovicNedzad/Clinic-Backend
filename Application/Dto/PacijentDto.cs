@@ -17,7 +17,7 @@ namespace Application.Dto
         public int BrojGodina{get;set;}
         public string Pol{get;set;}
 
-        public string IdLekara{get;set;}
+        public Guid IdLekara{get;set;}
         public Guid IdOdeljenja{get;set;}
         
     }

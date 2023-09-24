@@ -59,6 +59,7 @@ namespace API.Controllers
             {
                 return new UserDto
                 {
+                    Id=user.Id,
                     Image = null,
                     Ime = user.Ime,
                     Token = _tokenService.CreateToken(user),
@@ -99,6 +100,7 @@ namespace API.Controllers
             {
                 return new UserDto
                 {
+                    Id=user.Id,
                     Image = null,
                     Ime = registerDto.Ime,
                     Token = _tokenService.CreateToken(user),

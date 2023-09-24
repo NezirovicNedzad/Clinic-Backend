@@ -71,15 +71,14 @@ private readonly DataContext _context;
     public async Task<IActionResult>CreatePacijent(PacijentDto pacijentDto)
     {
           Odeljenje Odeljenje=await _context.Odeljenja.FindAsync(pacijentDto.IdOdeljenja);
-            var Lekar=await _userManager.FindByIdAsync(pacijentDto.IdLekara);
-            var Karton=new Karton{
+            AppUser Lekar=await _userManager.FindByIdAsync(pacijentDto.IdLekara.ToString());
+            Karton Karton=new Karton{
 
  Dijagnoza="",
  Terapija="",
  Odeljenje=Odeljenje,
  Lekar=Lekar            };
 
-Odeljenje odeljenje2= new Odeljenje{Id=Odeljenje.Id,Naziv=Odeljenje.Naziv,BrojKreveta=Odeljenje.BrojKreveta,BrojPacijenata=Odeljenje.BrojPacijenata+1,Osoblje=Odeljenje.Osoblje};
 List<Karton> icollection = new List<Karton>();
 icollection.Add(Karton);
 
@@ -92,11 +91,11 @@ icollection.Add(Karton);
  BrojGodina=pacijentDto.BrojGodina,
  Odeljenje=Odeljenje,
  Kartoni=icollection,
- 
+ Lekar=Lekar
 
       };
  
-_mapper.Map(odeljenje2,Odeljenje);
+Odeljenje.BrojPacijenata=Odeljenje.BrojPacijenata+1;
 await _context.SaveChangesAsync();
         return HandleResult(await _mediator.Send( new CreatePacijent.Command{  Pacijent=pacijent    }));
     }

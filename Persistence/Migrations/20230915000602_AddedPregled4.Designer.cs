@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230913102056_role")]
-    partial class role
+    [Migration("20230915000602_AddedPregled4")]
+    partial class AddedPregled4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,6 +139,33 @@ namespace Persistence.Migrations
                     b.ToTable("Kartoni");
                 });
 
+            modelBuilder.Entity("Domain.Napomena", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("KartonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NezeljenoDejstvo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primedba")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SestraId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KartonId");
+
+                    b.HasIndex("SestraId");
+
+                    b.ToTable("Napomene");
+                });
+
             modelBuilder.Entity("Domain.Odeljenje", b =>
                 {
                     b.Property<Guid>("Id")
@@ -177,6 +204,9 @@ namespace Persistence.Migrations
                     b.Property<string>("JMBG")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LekarId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<Guid?>("OdeljenjeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -188,9 +218,41 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LekarId");
+
                     b.HasIndex("OdeljenjeId");
 
                     b.ToTable("Pacijenti");
+                });
+
+            modelBuilder.Entity("Domain.Pregled", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Anamneza")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Dijagnoza")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("KartonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LekarId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Terapija")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KartonId");
+
+                    b.HasIndex("LekarId");
+
+                    b.ToTable("Pregledi");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -342,25 +404,63 @@ namespace Persistence.Migrations
                         .HasForeignKey("LekarId");
 
                     b.HasOne("Domain.Odeljenje", "Odeljenje")
-                        .WithMany("Kartoni")
+                        .WithMany()
                         .HasForeignKey("OdeljenjeId");
 
-                    b.HasOne("Domain.Pacijent", null)
+                    b.HasOne("Domain.Pacijent", "Pacijent")
                         .WithMany("Kartoni")
                         .HasForeignKey("PacijentId");
 
                     b.Navigation("Lekar");
 
                     b.Navigation("Odeljenje");
+
+                    b.Navigation("Pacijent");
+                });
+
+            modelBuilder.Entity("Domain.Napomena", b =>
+                {
+                    b.HasOne("Domain.Karton", "Karton")
+                        .WithMany("Nampomene")
+                        .HasForeignKey("KartonId");
+
+                    b.HasOne("Domain.AppUser", "Sestra")
+                        .WithMany()
+                        .HasForeignKey("SestraId");
+
+                    b.Navigation("Karton");
+
+                    b.Navigation("Sestra");
                 });
 
             modelBuilder.Entity("Domain.Pacijent", b =>
                 {
+                    b.HasOne("Domain.AppUser", "Lekar")
+                        .WithMany()
+                        .HasForeignKey("LekarId");
+
                     b.HasOne("Domain.Odeljenje", "Odeljenje")
                         .WithMany("Pacijenti")
                         .HasForeignKey("OdeljenjeId");
 
+                    b.Navigation("Lekar");
+
                     b.Navigation("Odeljenje");
+                });
+
+            modelBuilder.Entity("Domain.Pregled", b =>
+                {
+                    b.HasOne("Domain.Karton", "Karton")
+                        .WithMany("Pregledi")
+                        .HasForeignKey("KartonId");
+
+                    b.HasOne("Domain.AppUser", "Lekar")
+                        .WithMany("Pregledi")
+                        .HasForeignKey("LekarId");
+
+                    b.Navigation("Karton");
+
+                    b.Navigation("Lekar");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -417,12 +517,19 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
                     b.Navigation("Kartoni");
+
+                    b.Navigation("Pregledi");
+                });
+
+            modelBuilder.Entity("Domain.Karton", b =>
+                {
+                    b.Navigation("Nampomene");
+
+                    b.Navigation("Pregledi");
                 });
 
             modelBuilder.Entity("Domain.Odeljenje", b =>
                 {
-                    b.Navigation("Kartoni");
-
                     b.Navigation("Osoblje");
 
                     b.Navigation("Pacijenti");

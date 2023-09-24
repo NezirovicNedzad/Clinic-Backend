@@ -19,7 +19,11 @@ namespace Domain
 
         public Odeljenje Odeljenje {get; set;}
 
+        public Pacijent Pacijent{get;set;}
+
+public ICollection<Pregled> Pregledi{get; set;}
 
 
+public ICollection<Napomena> Nampomene {get;set;}
     }
 }

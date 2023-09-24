@@ -39,7 +39,7 @@ namespace Application.Pacijenti
             
                 var result = await _uof.SaveAsync();
 
-                if (!result) return Result<Unit>.Failure("Failed to delete odeljenje");
+                if (!result) return Result<Unit>.Failure("Failed to delete pacijent");
 
                 return Result<Unit>.Success(Unit.Value);
             

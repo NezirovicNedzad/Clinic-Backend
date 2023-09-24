@@ -15,6 +15,9 @@ namespace Domain
         
         public int BrojGodina{get;set;}
         public string Pol{get;set;}
+        
+        
+        public AppUser Lekar {get; set;}
        public Odeljenje Odeljenje{get; set;}
         
         public ICollection<Karton> Kartoni {get;set;}

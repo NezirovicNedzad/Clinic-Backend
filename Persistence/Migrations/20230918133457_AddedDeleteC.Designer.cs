@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230918133457_AddedDeleteC")]
+    partial class AddedDeleteC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,9 +233,6 @@ namespace Persistence.Migrations
                     b.Property<string>("Terapija")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("VremePregleda")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("KartonId");
@@ -389,8 +389,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Karton", "Karton")
                         .WithMany("Nampomene")
-                        .HasForeignKey("KartonId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("KartonId");
 
                     b.HasOne("Domain.AppUser", "Sestra")
                         .WithMany()
@@ -420,8 +419,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Karton", "Karton")
                         .WithMany("Pregledi")
-                        .HasForeignKey("KartonId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("KartonId");
 
                     b.HasOne("Domain.AppUser", "Lekar")
                         .WithMany("Pregledi")
