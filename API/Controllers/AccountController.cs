@@ -139,25 +139,16 @@ namespace API.Controllers
 
         [HttpDelete("AdminDeleteUser")]
         [AllowAnonymous]
-
-
-
         public async Task<IActionResult> AdminDelteUser(string id)
         {
-
             return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));
-
         }
-
-
 
         [HttpGet("GetAllUsers")]
         [AllowAnonymous]
         public async Task<IActionResult> GetUsers()
         {
-
             return HandleResult(await _mediator.Send(new List.Query()));
-
         }
 
 

@@ -1,4 +1,7 @@
-﻿using Domain;
+﻿using Application.Core;
+using Domain;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,9 +17,9 @@ namespace Application.Repositories
         
         Task<Odeljenje> GetOdeljenje(Guid id);
 
-        void CreateOdeljenje(Odeljenje odeljenje);
+        Task CreateOdeljenje(Odeljenje odeljenje);
         
-        void EditOdeljenje(Guid id,Odeljenje Odeljenje);
+        Task EditOdeljenje(Guid id,Odeljenje Odeljenje);
 
          Task DeleteOdeljenjeAsync(Guid id);
     }
