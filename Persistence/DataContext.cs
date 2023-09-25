@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Persistence
 {
@@ -35,14 +36,12 @@ public DbSet<Karton> Kartoni{get;set;}
   protected override void  OnModelCreating(ModelBuilder builder)
   {
 
-builder.Entity<IdentityUserLogin<string>>().HasNoKey();
+builder.Entity<IdentityUserLogin<string>>().HasKey(x=>x.UserId);
 
 
-builder.Entity<IdentityUserToken<string>>().HasNoKey();
+builder.Entity<IdentityUserToken<string>>().HasKey(x=>x.UserId);
 
-
-builder.Entity<IdentityUserRole<string>>().HasNoKey();
-
+builder.Entity<IdentityUserRole<string>>().HasKey(d=> new {d.RoleId,d.UserId});
 
 
 builder.Entity<Pacijent>().HasMany(x=>x.Kartoni).WithOne(p=>p.Pacijent).OnDelete(DeleteBehavior.Cascade);

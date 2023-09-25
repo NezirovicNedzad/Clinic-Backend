@@ -35,7 +35,7 @@ namespace Application.Odeljenja
 
                 if (odeljenje == null) return null;
 
-                _uof.OdeljenjeRepository.EditOdeljenje(request.Odeljenje.Id, request.Odeljenje);
+             await   _uof.OdeljenjeRepository.EditOdeljenje(request.Odeljenje.Id, request.Odeljenje);
                
                 var result = await _uof.SaveAsync();
 
