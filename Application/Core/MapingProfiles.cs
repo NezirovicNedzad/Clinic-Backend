@@ -18,6 +18,8 @@ namespace Application.Core
         {
             CreateMap<Odeljenje,Odeljenje>();
 
+
+        CreateMap<Pacijent,Pacijent>();
         }
 
 

@@ -28,7 +28,7 @@ namespace Application.UnitsOfWork
 
         public IKorisniciRepository KorisniciRepository => new KorisniciRepository(_dataContext);
 
-        public IPacijentRepository PacijentRepository => new PacijentRepository(_dataContext,_userManager);
+        public IPacijentRepository PacijentRepository => new PacijentRepository(_dataContext,_userManager,_mapper);
         public IKartonRepository KartonRepository=>new KartonRepository(_dataContext);
            
          public IPregledRepository PregledRepository=>new PregledRepository(_dataContext,_userManager);

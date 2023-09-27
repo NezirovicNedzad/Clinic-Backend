@@ -13,10 +13,12 @@ namespace Application.Repositories
         Task <List<Pacijent>> GetPacijents(); 
 
         Task <List<Pacijent>> GetPacijentiPoOdeljenju(Odeljenje odeljenje);
-         Task<Pacijent> GetPacijent(Guid id);
+         Task<PacijentDto2> GetPacijent(Guid id);
          void CreatePacijent(Pacijent pacijent);
 
          Task DeletePacijentAsync(Guid id);
+         
+       Task PrebaciPacijenta(Guid idP,Pacijent pacijent);
 
 
     }

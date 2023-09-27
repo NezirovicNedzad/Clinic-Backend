@@ -107,7 +107,52 @@ await _context.SaveChangesAsync();
         {
             return HandleResult(await _mediator.Send(new DeletePacijent.Command { Id = id }));
         }
+[HttpPut("{idP}/{idO}/{idL}")]
+ [AllowAnonymous]
+  public async Task<IActionResult>PrebaciPacijenta(Guid idP,Guid idO,string idL)
+  {
 
+    AppUser Lekar=await _userManager.FindByIdAsync(idL);
+
+    Odeljenje odeljenje=await _context.Odeljenja.FindAsync(idO);
+
+    Pacijent p=await _context.Pacijenti.Where(p=>p.Id==idP).Include(l=>l.Lekar).FirstAsync();
+    Odeljenje odeljenjePacijentTrenutno=await _context.Odeljenja.Where(x=>x.Pacijenti.Contains(p)).FirstAsync();
+
+AppUser LekarPacijent=p.Lekar;  
+ 
+  Pacijent noviP=new Pacijent{
+    Id=p.Id,
+    JMBG=p.JMBG,
+    Ime=p.Ime,
+    Prezime=p.Prezime,
+    BrojGodina=p.BrojGodina,
+    Pol=p.Pol,
+    Odeljenje=odeljenje,
+    Lekar=p.Lekar
+  };
+   Karton karton= new Karton{
+
+    Id=Guid.NewGuid(),
+    Pacijent=noviP,
+    Odeljenje=odeljenje,
+    Lekar=Lekar,
+    Pregledi={},
+    Dijagnoza="",
+    Terapija=""
+  };
+
+  _context.Remove(p);
+ 
+
+_context.Kartoni.Add(karton); 
+
+odeljenjePacijentTrenutno.BrojPacijenata=odeljenjePacijentTrenutno.BrojPacijenata-1;
+odeljenje.BrojPacijenata=odeljenje.BrojPacijenata+1;
+            return HandleResult(await _mediator.Send(new CreatePacijent.Command { Pacijent = noviP, }));
+  
+
+  }
 
     }
 }

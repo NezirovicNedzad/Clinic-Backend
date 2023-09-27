@@ -32,7 +32,7 @@ public DbSet<Karton> Kartoni{get;set;}
        public DbSet<Pregled>Pregledi{get;set;}
 
        public DbSet<Napomena>Napomene{get; set;}
-  
+
   protected override void  OnModelCreating(ModelBuilder builder)
   {
 
@@ -44,7 +44,6 @@ builder.Entity<IdentityUserToken<string>>().HasKey(x=>x.UserId);
 builder.Entity<IdentityUserRole<string>>().HasKey(d=> new {d.RoleId,d.UserId});
 
 
-builder.Entity<Pacijent>().HasMany(x=>x.Kartoni).WithOne(p=>p.Pacijent).OnDelete(DeleteBehavior.Cascade);
 
 builder.Entity<Karton>().HasMany(x=>x.Pregledi).WithOne(p=>p.Karton).OnDelete(DeleteBehavior.Cascade);
 

@@ -4,25 +4,42 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Application.Dto;
+using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Persistence;
 
 namespace Application.Repositories
 {
     public class KartonRepository : IKartonRepository
     {
+          
 
 private readonly DataContext _context;
 
         public KartonRepository(DataContext context)
         {
             _context = context;
+           
         }
 
-        public async Task<KartonDto> GetKartoniPacijenta(Guid idP, Guid idO)
+        public async Task CreateKarton(Karton karton)
+        { await _context.Kartoni.AddAsync(karton);
+        }
+
+        public async Task<List<KartonDtoIstorija>> GetKartoniPacijenta(Guid IdPacijenta)
+        {
+Pacijent p=await _context.Pacijenti.FindAsync(IdPacijenta);
+
+List<KartonDtoIstorija> kartoniPacijenta=await _context.Kartoni.Where(x=>x.Pacijent.Equals(p)).Select(x=>new KartonDtoIstorija{IdK=x.Id,IdPacijenta=x.Pacijent.Id,IdOdeljenja=x.Odeljenje.Id,NazivOdeljenja=x.Odeljenje.Naziv,PrezimeLekara=x.Lekar.Prezime,ImeLekara=x.Lekar.Ime}).ToListAsync();
+
+        return kartoniPacijenta;
+        }
+
+        public async Task<KartonDto> GetKartonPacijenta(Guid idP, Guid idO)
         {
             Odeljenje odeljenje=await _context.Odeljenja.FindAsync(idO);
             Pacijent P=await _context.Pacijenti.FindAsync(idP);
@@ -42,5 +59,7 @@ KartonDto kartonDto= new KartonDto{
 
 return kartonDto;
         }
+
+       
     }
 }
