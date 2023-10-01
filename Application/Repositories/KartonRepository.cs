@@ -28,19 +28,25 @@ private readonly DataContext _context;
             Pacijent P=await _context.Pacijenti.FindAsync(idP);
 
 
-var k= await _context.Kartoni.Where(k =>k.Pacijent==P && k.Odeljenje==odeljenje).Select(n=>new{Id=n.Id,Dijagnoza=n.Dijagnoza,Terapija=n.Terapija,Lekar=n.Lekar}).FirstAsync();
-LekarDto lekar=new LekarDto{Id=k.Lekar.Id,Ime=k.Lekar.Ime,Prezime=k.Lekar.Prezime};
-var Pregledi=await _context.Pregledi.Where(pregled=>pregled.Karton.Id==k.Id).Select(s=>new PregledDto2{Id=s.Id,Dijagnoza=s.Dijagnoza,VremePregleda=s.VremePregleda,Anamneza=s.Anamneza,Terapija=s.Terapija,Lekar=new LekarDto{Id=s.Lekar.Id,Ime=s.Lekar.Ime,Prezime=s.Lekar.Prezime}}).ToListAsync();
-KartonDto kartonDto= new KartonDto{
-    
-    Id=k.Id,
-    Dijagnoza=k.Dijagnoza,
-    Terapija=k.Terapija,
-    Pregledi=Pregledi,
-    Lekar=lekar
-    };
+            var k= await _context.Kartoni.Where(k =>k.Pacijent==P && k.Odeljenje==odeljenje).Select(n=>new{Id=n.Id,Dijagnoza=n.Dijagnoza,Terapija=n.Terapija,Lekar=n.Lekar}).FirstAsync();
+            LekarDto lekar=new LekarDto{Id=k.Lekar.Id,Ime=k.Lekar.Ime,Prezime=k.Lekar.Prezime};
+         
+            var Pregledi=await _context.Pregledi.Where(pregled=>pregled.Karton.Id==k.Id).Select(s=>new PregledDto2{Id=s.Id,Dijagnoza=s.Dijagnoza,VremePregleda=s.VremePregleda,Anamneza=s.Anamneza,Terapija=s.Terapija,Lekar=new LekarDto{Id=s.Lekar.Id,Ime=s.Lekar.Ime,Prezime=s.Lekar.Prezime}}).ToListAsync();
 
-return kartonDto;
+            var Napomene = await _context.Napomene.Where(napomena => napomena.Karton.Id == k.Id).Select(s => new NapomenaDto { Id = s.Id, Primedba = s.Primedba, NezeljenoDejstvo = s.NezeljenoDejstvo, Sestra = new SestraDto { Id = s.Sestra.Id, Ime = s.Sestra.Ime, Prezime = s.Sestra.Prezime } }).ToListAsync();
+
+            KartonDto kartonDto= new KartonDto {
+    
+                Id=k.Id,
+                Dijagnoza=k.Dijagnoza,
+                Terapija=k.Terapija,
+                Pregledi=Pregledi,
+                Lekar=lekar,
+                Napomene = Napomene
+            };
+
+            return kartonDto;
+        
         }
     }
 }

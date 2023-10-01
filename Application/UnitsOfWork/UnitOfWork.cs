@@ -32,6 +32,9 @@ namespace Application.UnitsOfWork
         public IKartonRepository KartonRepository=>new KartonRepository(_dataContext);
            
          public IPregledRepository PregledRepository=>new PregledRepository(_dataContext,_userManager);
+
+        public INapomenaRepository NapomenaRepository => new NapomenaRepository(_dataContext, _userManager);
+
         public async Task<bool> SaveAsync()
         {
             return await _dataContext.SaveChangesAsync() > 0;

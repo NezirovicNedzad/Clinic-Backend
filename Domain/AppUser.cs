@@ -15,7 +15,7 @@ namespace Domain
         public string Role { get; set; }
       
         public string Specijalizacija { get; set; }
-      
+
         public Odeljenje Odeljenje {get; set;}
         public ICollection<Karton> Kartoni {get; set;}
         public ICollection<Pregled> Pregledi{get; set;}

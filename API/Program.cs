@@ -41,8 +41,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 using (var scope = app.Services.CreateScope()) 
-/*
-{
+/*{
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -166,8 +165,7 @@ catch (Exception ex)
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "An error occured during migration");
 
-}
-*/
+}*/
 
 
 app.Run();

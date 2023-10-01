@@ -1,16 +1,17 @@
+﻿using Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain
+namespace Application.Dto
 {
-    public class Napomena
+    public class NapomenaDto
     {
-        public Guid Id{get;set ;}
+        public Guid Id { get; set; }
         public string NezeljenoDejstvo { get; set; }
         public string Primedba { get; set; }
-        public Karton Karton{get; set;}
-        public AppUser Sestra {get; set;}
+        public SestraDto Sestra { get; set; }
     }
 }

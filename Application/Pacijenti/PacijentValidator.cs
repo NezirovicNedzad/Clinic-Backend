@@ -15,6 +15,8 @@ namespace Application.Pacijenti
             RuleFor(x => x.Ime).NotEmpty();
             RuleFor(x => x.Prezime).NotEmpty();
             RuleFor(x => x.JMBG).NotEmpty();
+            RuleFor(x => x.BrojGodina).NotEmpty();
+            RuleFor(x => x.Pol).NotEmpty();
         }
         
         

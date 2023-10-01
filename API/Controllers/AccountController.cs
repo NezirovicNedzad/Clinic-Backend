@@ -38,42 +38,50 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-
-
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
-            if (user == null) return Unauthorized();
-
-
-            var Odeljenje = await _context.Odeljenja.Where(s => s.Osoblje.Contains(user)).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return Unauthorized("Pogrešna email ili lozinka.");
+            }
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
-            var roles = await _userManager.GetRolesAsync(user);
-
-
-
-            var role = roles[0];
-
-            if (result)
+            if (!result)
             {
-                return new UserDto
-                {
-                    Id=user.Id,
-                    Image = null,
-                    Ime = user.Ime,
-                    Token = _tokenService.CreateToken(user),
-                    Username = user.UserName,
-                    Role = role,
-                    Email = user.Email,
-                    Prezime = user.Prezime,
-                    OdeljenjeId = Odeljenje.Id.ToString(),
-                    Specijalizacija = user.Specijalizacija,
-                };
+                return Unauthorized("Pogrešna email ili lozinka.");
             }
 
-            return Unauthorized();
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(role))
+            {
+                return Unauthorized("Korisnik nema dodeljenu ulogu.");
+            }
+
+            var Odeljenje = await _context.Odeljenja.FirstOrDefaultAsync(s => s.Osoblje.Contains(user));
+
+            if (Odeljenje == null)
+            {
+                return Unauthorized("Korisnik nije deo nijednog odeljenja.");
+            }
+
+            return new UserDto
+            {
+                Id = user.Id,
+                Image = null,
+                Ime = user.Ime,
+                Token = _tokenService.CreateToken(user),
+                Username = user.UserName,
+                Role = role,
+                Email = user.Email,
+                Prezime = user.Prezime,
+                OdeljenjeId = Odeljenje.Id.ToString(),
+                Specijalizacija = user.Specijalizacija,
+            };
         }
+
 
         [HttpPost("AdminCreateUser")]
         [AllowAnonymous]
@@ -151,6 +159,25 @@ namespace API.Controllers
             return HandleResult(await _mediator.Send(new List.Query()));
         }
 
+        [HttpGet("GetAllUsersWithOdeljenjeId")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<UserDto>>> GetAllUsersWithOdeljenjeId()
+        {
+            var usersWithOdeljenjeId = await _context.Users
+                .Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    Ime = u.Ime,
+                    Prezime = u.Prezime,
+                    Email = u.Email,
+                    Role = u.Role,
+                    Specijalizacija = u.Specijalizacija,
+                    OdeljenjeId = u.Odeljenje.Id.ToString()
+                })
+                .ToListAsync();
+
+            return usersWithOdeljenjeId;
+        }
 
         [HttpGet("{id}")]
         [AllowAnonymous]

@@ -11,9 +11,10 @@ namespace Application.UnitsOfWork
     {
         IOdeljenjeRepository OdeljenjeRepository { get; }
         IKorisniciRepository KorisniciRepository { get; }
-IKartonRepository KartonRepository{get;}
-        IPacijentRepository PacijentRepository{get;}
+        IKartonRepository KartonRepository {get;}
+        IPacijentRepository PacijentRepository {get;}
         IPregledRepository PregledRepository {get;}
+        INapomenaRepository NapomenaRepository { get; }
         Task<bool> SaveAsync();
     }
 }

@@ -88,7 +88,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("OdeljenjeId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Karton", b =>
@@ -120,7 +120,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("PacijentId");
 
-                    b.ToTable("Kartoni");
+                    b.ToTable("Kartoni", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Napomena", b =>
@@ -147,7 +147,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("SestraId");
 
-                    b.ToTable("Napomene");
+                    b.ToTable("Napomene", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Odeljenje", b =>
@@ -170,7 +170,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Odeljenja");
+                    b.ToTable("Odeljenja", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Pacijent", b =>
@@ -206,7 +206,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("OdeljenjeId");
 
-                    b.ToTable("Pacijenti");
+                    b.ToTable("Pacijenti", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Pregled", b =>
@@ -239,7 +239,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("LekarId");
 
-                    b.ToTable("Pregledi");
+                    b.ToTable("Pregledi", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -258,7 +258,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -280,7 +280,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -302,7 +302,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -323,7 +323,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserLogins");
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -336,7 +336,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("RoleId", "UserId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -357,7 +357,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Domain.AppUser", b =>
