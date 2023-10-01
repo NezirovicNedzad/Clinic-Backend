@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Core;
-using Application.Dto;
 using Application.UnitsOfWork;
 using Domain;
 using FluentValidation;
@@ -12,22 +11,22 @@ using MediatR.Wrappers;
 
 namespace Application.Pacijenti
 {
-    public class CreatePacijent
+    public class PrebaciPacijenta
     {
-
-        public class Command : IRequest<Result<Unit>>
+         public class Command : IRequest<Result<Unit>>
         {
-            public Pacijent Pacijent { get; set; }
-         
+          public Guid IdP{get;set;}
+          public Pacijent Pacijent {get;set;}
         }
 
- public class CommandValidator : AbstractValidator<Command>
+public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
                 RuleFor(x => x.Pacijent).SetValidator(new PacijentValidator());
             }
         }
+
 
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -42,17 +41,18 @@ namespace Application.Pacijenti
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-             _uof.PacijentRepository.CreatePacijent(request.Pacijent);
+                 var pacijent = await _uof.PacijentRepository.GetPacijent(request.IdP);
 
-             
+                if (pacijent == null) return null;
+
+             await   _uof.PacijentRepository.PrebaciPacijenta(request.IdP, request.Pacijent);
+               
                 var result = await _uof.SaveAsync();
 
-                if (!result) return Result<Unit>.Failure("Failed to create pacijent");
+                if (!result) return Result<Unit>.Failure("Failed to update odeljenje");
 
                 return Result<Unit>.Success(Unit.Value);
             }
         }
-
-
     }
 }

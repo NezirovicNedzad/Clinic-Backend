@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Core;
+using Application.Dto;
 using Application.UnitsOfWork;
 using Domain;
 using MediatR;
@@ -11,12 +12,12 @@ namespace Application.Pacijenti
 {
     public class DetailsPacijent
     {
-          public class Query :IRequest<Result<Pacijent>>
+          public class Query :IRequest<Result<PacijentDto2>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<Pacijent>>
+        public class Handler : IRequestHandler<Query, Result<PacijentDto2>>
         {
             private readonly IUnitOfWork _uof;
 
@@ -27,11 +28,11 @@ namespace Application.Pacijenti
 
          
 
-            async Task<Result<Pacijent>> IRequestHandler<Query, Result<Pacijent>>.Handle(Query request, CancellationToken cancellationToken)
+            async Task<Result<PacijentDto2>> IRequestHandler<Query, Result<PacijentDto2>>.Handle(Query request, CancellationToken cancellationToken)
             {
                 var pacijent = await _uof.PacijentRepository.GetPacijent(request.Id);
 
-                return Result<Pacijent>.Success(pacijent);
+                return Result<PacijentDto2>.Success(pacijent);
             }
         }
 

@@ -32,19 +32,21 @@ public DbSet<Karton> Kartoni{get;set;}
        public DbSet<Pregled>Pregledi{get;set;}
 
        public DbSet<Napomena>Napomene{get; set;}
-  
+
   protected override void  OnModelCreating(ModelBuilder builder)
   {
 
-        builder.Entity<IdentityUserLogin<string>>().HasKey(x=>x.UserId);
+ base.OnModelCreating(builder);
+
+        
+            builder.Entity<IdentityRole>()
+                    .HasData(
+                        new IdentityRole { Name = "Lekar", NormalizedName = "LEKAR" },
+                        new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },    
+                        new IdentityRole { Name = "Sestra", NormalizedName = "SESTRA" }
+                    );
 
 
-        builder.Entity<IdentityUserToken<string>>().HasKey(x=>x.UserId);
-
-        builder.Entity<IdentityUserRole<string>>().HasKey(d=> new {d.RoleId,d.UserId});
-
-
-        builder.Entity<Pacijent>().HasMany(x=>x.Kartoni).WithOne(p=>p.Pacijent).OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Karton>().HasMany(x=>x.Pregledi).WithOne(p=>p.Karton).OnDelete(DeleteBehavior.Cascade);
 

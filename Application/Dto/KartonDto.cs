@@ -18,6 +18,7 @@ namespace Application.Dto
         public ICollection<PregledDto2> Pregledi {get; set;}
         public ICollection<NapomenaDto> Napomene {get; set;}
  
+       
         public LekarDto Lekar {get; set;}
  
     }

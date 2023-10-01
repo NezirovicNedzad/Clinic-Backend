@@ -1,4 +1,5 @@
 ﻿using Application.Core;
+using Application.Dto;
 using Application.UnitsOfWork;
 using Domain;
 using MediatR;
@@ -12,11 +13,11 @@ namespace Application.Korisnici
 {
     public class List
     {
-        public class Query : IRequest<Result<List<AppUser>>>
+        public class Query : IRequest<Result<List<UserGetDto>>>
         {
         }
 
-        public class Handler : IRequestHandler<Query, Result<List<AppUser>>>
+        public class Handler : IRequestHandler<Query, Result<List<UserGetDto>>>
         {
             private readonly IUnitOfWork _uof;
 
@@ -25,9 +26,9 @@ namespace Application.Korisnici
                 _uof = uof;
             }
 
-            public async Task<Result<List<AppUser>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<UserGetDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return Result<List<AppUser>>.Success(await _uof.KorisniciRepository.GetUsers());
+                return Result<List<UserGetDto>>.Success(await _uof.KorisniciRepository.GetUsers());
             }
         }
     }

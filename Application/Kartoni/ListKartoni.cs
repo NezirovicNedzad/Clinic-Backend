@@ -18,6 +18,7 @@ namespace Application.Kartoni
 
             public Guid IdO{get; set;}
             public Guid IdP{get; set;}
+             
         }
 
         public class Handler : IRequestHandler<Query, Result<KartonDto>>
@@ -32,7 +33,7 @@ namespace Application.Kartoni
 
             public async Task<Result<KartonDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-               return Result<KartonDto>.Success(await _uof.KartonRepository.GetKartoniPacijenta(request.IdP,request.IdO));
+               return Result<KartonDto>.Success(await _uof.KartonRepository.GetKartonPacijenta(request.IdP,request.IdO));
             }
         }
     }

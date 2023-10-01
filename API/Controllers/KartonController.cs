@@ -25,7 +25,13 @@ namespace API.Controllers
             
         }
 
-
+[HttpGet("{idP}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetKartonPacijenta(Guid idP)
+        {
+            return HandleResult(await _mediator.Send(new ListKartoniPacijent.Query{IdPacijent=idP}));
+            
+        }
 
 
     }

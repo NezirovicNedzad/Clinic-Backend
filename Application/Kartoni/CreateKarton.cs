@@ -3,29 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Core;
-using Application.Dto;
 using Application.UnitsOfWork;
 using Domain;
 using FluentValidation;
 using MediatR;
-using MediatR.Wrappers;
 
-namespace Application.Pacijenti
+namespace Application.Kartoni
 {
-    public class CreatePacijent
+    public class CreateKarton
     {
-
         public class Command : IRequest<Result<Unit>>
         {
-            public Pacijent Pacijent { get; set; }
-         
+            public Karton Karton { get; set; }
         }
 
- public class CommandValidator : AbstractValidator<Command>
+        public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Pacijent).SetValidator(new PacijentValidator());
+                RuleFor(x => x.Karton).SetValidator(new KartonValidator());
             }
         }
 
@@ -33,7 +29,7 @@ namespace Application.Pacijenti
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
 
-            private readonly IUnitOfWork _uof;
+private readonly IUnitOfWork _uof;
 
             public Handler(IUnitOfWork uof)
             {
@@ -42,17 +38,14 @@ namespace Application.Pacijenti
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-             _uof.PacijentRepository.CreatePacijent(request.Pacijent);
+            await _uof.KartonRepository.CreateKarton(request.Karton);
 
-             
                 var result = await _uof.SaveAsync();
 
-                if (!result) return Result<Unit>.Failure("Failed to create pacijent");
+                if (!result) return Result<Unit>.Failure("Failed to create odeljenje");
 
                 return Result<Unit>.Success(Unit.Value);
             }
         }
-
-
     }
 }
