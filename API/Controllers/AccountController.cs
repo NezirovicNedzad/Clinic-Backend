@@ -50,16 +50,6 @@ namespace API.Controllers
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             var roles = await _userManager.GetRolesAsync(user);
- var claims = new List<Claim>
-            {               
-            };
-
-
-      
-            foreach(var role1 in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role1));
-            }
 
             var role = roles[0];
 
