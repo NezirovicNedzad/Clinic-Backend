@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230915000602_AddedPregled4")]
-    partial class AddedPregled4
+    [Migration("20231001134957_AddAll")]
+    partial class AddAll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -246,6 +246,9 @@ namespace Persistence.Migrations
                     b.Property<string>("Terapija")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("VremePregleda")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KartonId");
@@ -280,6 +283,26 @@ namespace Persistence.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d4cd1fab-dce6-49cb-bdfd-97c4fe80ff9e",
+                            Name = "Lekar",
+                            NormalizedName = "LEKAR"
+                        },
+                        new
+                        {
+                            Id = "79e4f68f-882b-4b5c-badc-471f58eeee37",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "54e72cd3-4e00-48c7-a746-507bedf77a2e",
+                            Name = "Sestra",
+                            NormalizedName = "SESTRA"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -422,7 +445,8 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Karton", "Karton")
                         .WithMany("Nampomene")
-                        .HasForeignKey("KartonId");
+                        .HasForeignKey("KartonId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.AppUser", "Sestra")
                         .WithMany()
@@ -452,7 +476,8 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Karton", "Karton")
                         .WithMany("Pregledi")
-                        .HasForeignKey("KartonId");
+                        .HasForeignKey("KartonId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.AppUser", "Lekar")
                         .WithMany("Pregledi")

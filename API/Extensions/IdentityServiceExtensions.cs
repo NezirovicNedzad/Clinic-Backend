@@ -33,14 +33,18 @@ namespace API.Extensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            
             });
-
-            services.AddAuthorization(options =>
+services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy =>
                     policy.RequireRole("Admin"));
+                    options.AddPolicy("LekarOnly", policy =>
+                    policy.RequireRole("Lekar"));
+                    options.AddPolicy("SestraOnly", policy =>
+                    policy.RequireRole("Sestra"));
             });
-
+          
             services.AddScoped<TokenService>();
             return services;
         }

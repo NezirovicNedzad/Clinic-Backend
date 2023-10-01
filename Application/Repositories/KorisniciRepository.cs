@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Dto;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -25,9 +26,13 @@ namespace Application.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<List<AppUser>> GetUsers()
+        public async Task<List<UserGetDto>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+
+            List<AppUser> listK=await _context.Users.ToListAsync();
+
+         List<UserGetDto> listaUD=listK.Select(d=>new UserGetDto{Id=d.Id,Ime=d.Ime,Prezime=d.Prezime,Specijalizacija=d.Specijalizacija,Email=d.Email,OdeljenjeId=_context.Odeljenja.Where(o=>o.Osoblje.Contains(d)).First().Id.ToString(),Role=d.Role,Username=d.UserName}).ToList();
+            return  listaUD;
         }
     }
 }

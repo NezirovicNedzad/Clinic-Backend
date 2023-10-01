@@ -18,6 +18,7 @@ namespace Application.Pacijenti
         public class Command : IRequest<Result<Unit>>
         {
             public Pacijent Pacijent { get; set; }
+         
         }
 
  public class CommandValidator : AbstractValidator<Command>
@@ -46,7 +47,7 @@ namespace Application.Pacijenti
              
                 var result = await _uof.SaveAsync();
 
-                if (!result) return Result<Unit>.Failure("Failed to create odeljenje");
+                if (!result) return Result<Unit>.Failure("Failed to create pacijent");
 
                 return Result<Unit>.Success(Unit.Value);
             }

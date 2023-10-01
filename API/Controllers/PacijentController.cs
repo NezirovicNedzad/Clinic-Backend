@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
 namespace API.Controllers
 {
 
-    [AllowAnonymous]
     public class PacijentController :BaseApiController
     {
     private readonly IMapper _mapper;
@@ -61,12 +61,32 @@ private readonly DataContext _context;
         [HttpGet("{id}")]
           public async Task<IActionResult> GetPacijent(Guid id)
         {
-            return HandleResult(await _mediator.Send(new DetailsPacijent.Query { Id = id }));
+
+Pacijent pacijent= await _context.Pacijenti.Where(p=>p.Id==id).Include(l=>l.Lekar).FirstAsync(); 
+          Odeljenje odeljenje=await _context.Odeljenja.Where(o=>o.Pacijenti.Contains(pacijent)).FirstAsync();
+
+          AppUser lekar=await _userManager.FindByIdAsync(pacijent.Lekar.Id);
+
+        PacijentDto2 pacijentDto2=new PacijentDto2{
+            Id=pacijent.Id,
+            Ime=pacijent.Ime,
+            Prezime=pacijent.Prezime,
+            BrojGodina=pacijent.BrojGodina,
+            Pol=pacijent.Pol,
+            ImeLekara=lekar.Ime,
+            PrezimeLekara=lekar.Prezime,
+            UsernameLekara=lekar.UserName,
+            IdLekara=lekar.Id,
+            IdOdeljenja=odeljenje.Id
+        };
+
+return Ok(pacijentDto2);
+           // return HandleResult(await _mediator.Send(new DetailsPacijent.Query { Id = id }));
         }
       
 
     [HttpPost]
-
+    [Authorize(Policy ="SestraOnly")]
 
     public async Task<IActionResult>CreatePacijent(PacijentDto pacijentDto)
     {
@@ -107,7 +127,7 @@ await _context.SaveChangesAsync();
         {
             return HandleResult(await _mediator.Send(new DeletePacijent.Command { Id = id }));
         }
-[HttpPut("{idP}/{idO}/{idL}")]
+[HttpPost("prebaci/{idP}/{idO}/{idL}")]
  [AllowAnonymous]
   public async Task<IActionResult>PrebaciPacijenta(Guid idP,Guid idO,string idL)
   {
@@ -142,6 +162,9 @@ AppUser LekarPacijent=p.Lekar;
     Terapija=""
   };
 
+
+
+
   _context.Remove(p);
  
 
@@ -154,5 +177,32 @@ odeljenje.BrojPacijenata=odeljenje.BrojPacijenata+1;
 
   }
 
+
+  [HttpGet("/api/Pacijent/IzabraniLekar/{idL}")]
+
+
+public async Task<IActionResult>GetPacijenteIzabranogLekara(string idL)
+{
+
+  AppUser Lekar=await _userManager.FindByIdAsync(idL);
+        return HandleResult(await _mediator.Send(new ListIzabraniLekar.Query { lekar = Lekar, }));
+
+
+}
+
+
+
+
+
+
+
+
+
+  
+
     }
+
+
+
+
 }

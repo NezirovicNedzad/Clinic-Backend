@@ -18,8 +18,13 @@ namespace Application.Dto
         public int BrojGodina{get;set;}
         public string Pol{get;set;}
 
-        public AppUser Lekar{get;set;}
-        public Guid IdOdeljenja{get;set;}
+    
         
+        public string ImeLekara{get;set;}
+         public string PrezimeLekara{get;set;}
+         public string UsernameLekara{get;set;}
+        public string IdLekara{get;set;}
+        public Guid IdOdeljenja{get;set;}
+public string NazivOdeljenja{get;set;}        
     }
 }

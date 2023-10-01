@@ -10,7 +10,7 @@ namespace Application.Repositories
 {
     public interface IKartonRepository
     {
-       Task<KartonDto> GetKartonPacijenta(Guid idP,Guid idO);
+       Task<KartonDto> GetKartonPacijenta(Guid idP,Guid id);
        Task<List<KartonDtoIstorija>> GetKartoniPacijenta(Guid IdPacijenta);
 Task CreateKarton(Karton karton);
     }

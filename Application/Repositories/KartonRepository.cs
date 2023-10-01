@@ -32,11 +32,13 @@ private readonly DataContext _context;
 
         public async Task<List<KartonDtoIstorija>> GetKartoniPacijenta(Guid IdPacijenta)
         {
+
 Pacijent p=await _context.Pacijenti.FindAsync(IdPacijenta);
 
-List<KartonDtoIstorija> kartoniPacijenta=await _context.Kartoni.Where(x=>x.Pacijent.Equals(p)).Select(x=>new KartonDtoIstorija{IdK=x.Id,IdPacijenta=x.Pacijent.Id,IdOdeljenja=x.Odeljenje.Id,NazivOdeljenja=x.Odeljenje.Naziv,PrezimeLekara=x.Lekar.Prezime,ImeLekara=x.Lekar.Ime}).ToListAsync();
+List<KartonDtoIstorija> kartoniPacijenta=await _context.Kartoni.Where(x=>x.Pacijent.Equals(p)).Select(x=>new KartonDtoIstorija{IdK=x.Id,IdPacijenta=x.Pacijent.Id,IdOdeljenja=x.Odeljenje.Id,NazivOdeljenja=x.Odeljenje.Naziv,ImeLekara=x.Lekar.Ime,PrezimeLekara=x.Lekar.Prezime}).ToListAsync();
 
         return kartoniPacijenta;
+        
         }
 
         public async Task<KartonDto> GetKartonPacijenta(Guid idP, Guid idO)

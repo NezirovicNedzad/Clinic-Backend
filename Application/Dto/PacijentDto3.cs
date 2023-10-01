@@ -5,13 +5,8 @@ using System.Threading.Tasks;
 
 namespace Application.Dto
 {
-    public class LekarDto
+    public class PacijentDto3
     {
-        public string Id { get; set; }
-
-        public string Ime {get; set;}
         
-
-        public string Prezime {get; set;}
     }
 }

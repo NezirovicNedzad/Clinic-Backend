@@ -18,6 +18,7 @@ namespace Application.Kartoni
 
             public Guid IdO{get; set;}
             public Guid IdP{get; set;}
+             
         }
 
         public class Handler : IRequestHandler<Query, Result<KartonDto>>

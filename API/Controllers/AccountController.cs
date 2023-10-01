@@ -50,8 +50,16 @@ namespace API.Controllers
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             var roles = await _userManager.GetRolesAsync(user);
+ var claims = new List<Claim>
+            {               
+            };
 
 
+      
+            foreach(var role1 in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role1));
+            }
 
             var role = roles[0];
 
@@ -62,13 +70,14 @@ namespace API.Controllers
                     Id=user.Id,
                     Image = null,
                     Ime = user.Ime,
-                    Token = _tokenService.CreateToken(user),
+                    Token = await _tokenService.CreateToken(user),
                     Username = user.UserName,
                     Role = role,
                     Email = user.Email,
                     Prezime = user.Prezime,
                     OdeljenjeId = Odeljenje.Id.ToString(),
                     Specijalizacija = user.Specijalizacija,
+            
                 };
             }
 
@@ -79,8 +88,8 @@ namespace API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            Guid g = new Guid(registerDto.OdeljenjeId);
-            var Odeljenje = await _context.Odeljenja.FindAsync(g);
+            Guid guid=new Guid(registerDto.OdeljenjeId);
+            var Odeljenje = await _context.Odeljenja.FindAsync(guid);
 
             var user = new AppUser
             {
@@ -103,7 +112,7 @@ namespace API.Controllers
                     Id=user.Id,
                     Image = null,
                     Ime = registerDto.Ime,
-                    Token = _tokenService.CreateToken(user),
+
                     Username = registerDto.Username,
                     Role = registerDto.Role,
                     Email = registerDto.Email,
@@ -130,15 +139,17 @@ namespace API.Controllers
                 Image = null,
                 Ime = user.Ime,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user),
+                Token = _tokenService.CreateToken(user).ToString(),
                 Username = user.UserName,
                 OdeljenjeId = user.Odeljenje.Id.ToString(),
                 Specijalizacija = user.Specijalizacija,
             };
         }
 
+
+                [Authorize(Policy ="AdminOnly")]
         [HttpDelete("AdminDeleteUser")]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> AdminDelteUser(string id)
         {
             return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));

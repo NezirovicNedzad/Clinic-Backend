@@ -15,7 +15,7 @@ namespace Application.Dto
 public Guid IdOdeljenja{get; set;}
 public string NazivOdeljenja{get;set;}
    public string ImeLekara{get; set;}
-
+public string IdLekara{get;set;}
    public string PrezimeLekara{get; set;}
       
 

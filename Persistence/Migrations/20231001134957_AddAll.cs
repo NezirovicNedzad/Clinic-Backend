@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Alltogehter : Migration
+    public partial class AddAll : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,28 +93,6 @@ namespace Persistence.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Odeljenja_OdeljenjeId",
-                        column: x => x.OdeljenjeId,
-                        principalTable: "Odeljenja",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pacijenti",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    JMBG = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BrojGodina = table.Column<int>(type: "int", nullable: false),
-                    Pol = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OdeljenjeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pacijenti", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pacijenti_Odeljenja_OdeljenjeId",
                         column: x => x.OdeljenjeId,
                         principalTable: "Odeljenja",
                         principalColumn: "Id");
@@ -204,6 +184,34 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Pacijenti",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JMBG = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BrojGodina = table.Column<int>(type: "int", nullable: false),
+                    Pol = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LekarId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    OdeljenjeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pacijenti", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pacijenti_AspNetUsers_LekarId",
+                        column: x => x.LekarId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Pacijenti_Odeljenja_OdeljenjeId",
+                        column: x => x.OdeljenjeId,
+                        principalTable: "Odeljenja",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Kartoni",
                 columns: table => new
                 {
@@ -232,6 +240,70 @@ namespace Persistence.Migrations
                         column: x => x.PacijentId,
                         principalTable: "Pacijenti",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Napomene",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NezeljenoDejstvo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Primedba = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    KartonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SestraId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Napomene", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Napomene_AspNetUsers_SestraId",
+                        column: x => x.SestraId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Napomene_Kartoni_KartonId",
+                        column: x => x.KartonId,
+                        principalTable: "Kartoni",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pregledi",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Anamneza = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Dijagnoza = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VremePregleda = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Terapija = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    KartonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LekarId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pregledi", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pregledi_AspNetUsers_LekarId",
+                        column: x => x.LekarId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Pregledi_Kartoni_KartonId",
+                        column: x => x.KartonId,
+                        principalTable: "Kartoni",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "54e72cd3-4e00-48c7-a746-507bedf77a2e", null, "Sestra", "SESTRA" },
+                    { "79e4f68f-882b-4b5c-badc-471f58eeee37", null, "Admin", "ADMIN" },
+                    { "d4cd1fab-dce6-49cb-bdfd-97c4fe80ff9e", null, "Lekar", "LEKAR" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -294,9 +366,34 @@ namespace Persistence.Migrations
                 column: "PacijentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Napomene_KartonId",
+                table: "Napomene",
+                column: "KartonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Napomene_SestraId",
+                table: "Napomene",
+                column: "SestraId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pacijenti_LekarId",
+                table: "Pacijenti",
+                column: "LekarId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pacijenti_OdeljenjeId",
                 table: "Pacijenti",
                 column: "OdeljenjeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pregledi_KartonId",
+                table: "Pregledi",
+                column: "KartonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pregledi_LekarId",
+                table: "Pregledi",
+                column: "LekarId");
         }
 
         /// <inheritdoc />
@@ -318,16 +415,22 @@ namespace Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Kartoni");
+                name: "Napomene");
+
+            migrationBuilder.DropTable(
+                name: "Pregledi");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Kartoni");
 
             migrationBuilder.DropTable(
                 name: "Pacijenti");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Odeljenja");
