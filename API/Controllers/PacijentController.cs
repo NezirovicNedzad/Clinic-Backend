@@ -45,7 +45,7 @@ private readonly DataContext _context;
 
 
   [HttpGet("/api/Pacijent/odeljenja/{id}")]
-        
+        [Authorize(Policy ="LekarOrSestra")]
 
         public async Task<IActionResult> GetPacijentiPoOdeljenju(Guid id)
         {
@@ -59,6 +59,7 @@ private readonly DataContext _context;
 
 
         [HttpGet("{id}")]
+        [Authorize(Policy ="LekarOrSestra")]
           public async Task<IActionResult> GetPacijent(Guid id)
         {
 
@@ -123,13 +124,13 @@ await _context.SaveChangesAsync();
 
 
   [HttpDelete("{id}")]
-        
+        [Authorize(Policy ="LekarOnly")]
         public async Task<IActionResult> DeletePacijent(Guid id)
         {
             return HandleResult(await _mediator.Send(new DeletePacijent.Command { Id = id }));
         }
 [HttpPost("prebaci/{idP}/{idO}/{idL}")]
- [AllowAnonymous]
+[Authorize(Policy ="LekarOnly")]
   public async Task<IActionResult>PrebaciPacijenta(Guid idP,Guid idO,string idL)
   {
 
@@ -180,7 +181,7 @@ odeljenje.BrojPacijenata=odeljenje.BrojPacijenata+1;
 
 
   [HttpGet("/api/Pacijent/IzabraniLekar/{idL}")]
-
+[Authorize(Policy ="LekarOnly")]
 
 public async Task<IActionResult>GetPacijenteIzabranogLekara(string idL)
 {

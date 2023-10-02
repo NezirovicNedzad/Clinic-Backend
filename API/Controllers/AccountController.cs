@@ -158,14 +158,14 @@ namespace API.Controllers
         }
 
         [HttpGet("GetAllUsers")]
-        [AllowAnonymous]
+      
         public async Task<IActionResult> GetUsers()
         {
             return HandleResult(await _mediator.Send(new List.Query()));
         }
 
         [HttpGet("GetAllUsersWithOdeljenjeId")]
-        [AllowAnonymous]
+       
         public async Task<ActionResult<List<UserDto>>> GetAllUsersWithOdeljenjeId()
         {
             var usersWithOdeljenjeId = await _context.Users
@@ -185,7 +185,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
+      
         public async Task<IActionResult> GetUser(string id)
         {
 

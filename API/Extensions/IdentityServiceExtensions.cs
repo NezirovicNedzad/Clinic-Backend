@@ -43,6 +43,10 @@ services.AddAuthorization(options =>
                     policy.RequireRole("Lekar"));
                     options.AddPolicy("SestraOnly", policy =>
                     policy.RequireRole("Sestra"));
+      options.AddPolicy("LekarOrSestra",policy=> policy.RequireRole("Lekar","Sestra")
+                    
+                    );
+              
             });
           
             services.AddScoped<TokenService>();

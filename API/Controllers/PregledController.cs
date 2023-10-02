@@ -31,7 +31,7 @@ private readonly DataContext _context;
 
 
        [HttpGet]
-          [AllowAnonymous]
+          [Authorize(Policy ="LekarOrSestra")]
 
         public async Task<IActionResult> GetPreglediNaKartonu(Guid idk)
         {
@@ -41,7 +41,7 @@ private readonly DataContext _context;
 
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Policy ="LekarOnly")]
 
 
 

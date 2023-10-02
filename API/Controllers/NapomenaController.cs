@@ -23,14 +23,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Policy ="LekarOrSestra")]
         public async Task<IActionResult> GetNapomeneNaKartonu(Guid idk)
         {
             return HandleResult(await _mediator.Send(new ListNapomene.Query { IdK = idk }));
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Policy ="SestraOnly")]
         public async Task<IActionResult> CreateNapomea(NapomenaDto2 napomenaDto)
         {
             Karton karton = await _context.Kartoni.FindAsync(napomenaDto.IdKarton);

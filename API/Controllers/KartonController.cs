@@ -15,7 +15,7 @@ namespace API.Controllers
         }
         
         [HttpGet("{idO}/{idP}")]
-        [AllowAnonymous]
+        [Authorize(Policy ="LekarOrSestra")]
         public async Task<IActionResult> GetKartoniOdeljenja(Guid idO,Guid idP)
         {
             return HandleResult(await _mediator.Send(new ListKartoni.Query{IdO=idO,IdP=idP}));
@@ -23,6 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{idP}")]
+        [Authorize(Policy ="LekarOnly")]
         [AllowAnonymous]
         public async Task<IActionResult> GetKartonPacijenta(Guid idP)
         {

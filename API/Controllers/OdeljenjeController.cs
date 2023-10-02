@@ -19,28 +19,28 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+       
         public async Task<IActionResult> GetOdeljenja()
         {
             return HandleResult(await _mediator.Send(new List.Query()));
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
+       
         public async Task<IActionResult> GetOdeljenje(Guid id)
         {
             return HandleResult(await _mediator.Send(new Details.Query { Id = id }));
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Policy ="AdminOnly")]
         public async Task<IActionResult> CreateOdeljenje(Odeljenje odeljenje)
         {
             return HandleResult(await _mediator.Send(new Create.Command { Odeljenje = odeljenje }));
         }
 
         [HttpPut("{id}")]
-        [AllowAnonymous]
+         [Authorize(Policy ="AdminOnly")]
         public async Task<IActionResult> EditOdeljenje(Guid id, Odeljenje odeljenje)
         {
             odeljenje.Id = id;
@@ -49,7 +49,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [AllowAnonymous]
+         [Authorize(Policy ="AdminOnly")]
         public async Task<IActionResult> DeleteOdeljenje(Guid id)
         {
             return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));

@@ -31,7 +31,8 @@ namespace Application.Korisnici
 
                 if (user == null) return null;
 
-                _uof.KorisniciRepository.AdminDeleteUser(request.Id);
+await                _uof.KorisniciRepository.AdminDeleteUser(request.Id);
+
 
                 var result = await _uof.SaveAsync();
 
