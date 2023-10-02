@@ -59,6 +59,7 @@ await _context.Pacijenti.AddAsync(pacijent);
         PacijentDto2 pacijentDto2=new PacijentDto2{
             Id=p.Id,
             Ime=p.Ime,
+                JMBG=p.JMBG,
             Prezime=p.Prezime,
             BrojGodina=p.BrojGodina,
             Pol=p.Pol,

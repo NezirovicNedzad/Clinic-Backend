@@ -19,5 +19,6 @@ namespace Domain
         public Odeljenje Odeljenje {get; set;}
         public ICollection<Karton> Kartoni {get; set;}
         public ICollection<Pregled> Pregledi{get; set;}
+        public ICollection<Napomena> Napomene { get; set; }
     }
 }

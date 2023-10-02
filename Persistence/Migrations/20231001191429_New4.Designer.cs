@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231001191429_New4")]
+    partial class New4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,19 +287,19 @@ namespace Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "48bfba19-8737-470d-bc4a-720523f1c3bd",
+                            Id = "2730b1e3-26a2-46ea-9261-bd20cf00d293",
                             Name = "Lekar",
                             NormalizedName = "LEKAR"
                         },
                         new
                         {
-                            Id = "d6c27276-de3c-4d1a-8030-beef69f7bbf4",
+                            Id = "965676ae-7885-4b22-a558-b5f4f6e43a82",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1e44fb34-86df-4ba5-a640-73ef8ba42eaf",
+                            Id = "dc193383-0c07-40e7-8aa5-fbad8bcb7508",
                             Name = "Sestra",
                             NormalizedName = "SESTRA"
                         });
@@ -446,9 +449,8 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.AppUser", "Sestra")
-                        .WithMany("Napomene")
-                        .HasForeignKey("SestraId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("SestraId");
 
                     b.Navigation("Karton");
 
@@ -463,8 +465,7 @@ namespace Persistence.Migrations
 
                     b.HasOne("Domain.Odeljenje", "Odeljenje")
                         .WithMany("Pacijenti")
-                        .HasForeignKey("OdeljenjeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OdeljenjeId");
 
                     b.Navigation("Lekar");
 
@@ -541,8 +542,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
                     b.Navigation("Kartoni");
-
-                    b.Navigation("Napomene");
 
                     b.Navigation("Pregledi");
                 });

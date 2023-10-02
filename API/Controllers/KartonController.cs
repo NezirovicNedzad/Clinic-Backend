@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Kartoni;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +13,8 @@ namespace API.Controllers
         {
             _mediator = mediator;
         }
-      [HttpGet("{idO}/{idP}")]
+        
+        [HttpGet("{idO}/{idP}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetKartoniOdeljenja(Guid idO,Guid idP)
         {
@@ -25,7 +22,7 @@ namespace API.Controllers
             
         }
 
-[HttpGet("{idP}")]
+        [HttpGet("{idP}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetKartonPacijenta(Guid idP)
         {

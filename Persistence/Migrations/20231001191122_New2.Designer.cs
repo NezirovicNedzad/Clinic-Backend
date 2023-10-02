@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231001191122_New2")]
+    partial class New2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,19 +287,19 @@ namespace Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "48bfba19-8737-470d-bc4a-720523f1c3bd",
+                            Id = "811d1d1c-2c32-49f3-8288-c6be143e3808",
                             Name = "Lekar",
                             NormalizedName = "LEKAR"
                         },
                         new
                         {
-                            Id = "d6c27276-de3c-4d1a-8030-beef69f7bbf4",
+                            Id = "a078cca9-7ff2-487b-8d36-374465aef3bc",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1e44fb34-86df-4ba5-a640-73ef8ba42eaf",
+                            Id = "a971a719-12b6-4501-a4e6-f5bc29370ed8",
                             Name = "Sestra",
                             NormalizedName = "SESTRA"
                         });

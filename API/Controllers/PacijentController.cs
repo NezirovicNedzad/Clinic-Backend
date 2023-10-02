@@ -77,7 +77,8 @@ Pacijent pacijent= await _context.Pacijenti.Where(p=>p.Id==id).Include(l=>l.Leka
             PrezimeLekara=lekar.Prezime,
             UsernameLekara=lekar.UserName,
             IdLekara=lekar.Id,
-            IdOdeljenja=odeljenje.Id
+            IdOdeljenja=odeljenje.Id,
+            JMBG = pacijent.JMBG
         };
 
 return Ok(pacijentDto2);

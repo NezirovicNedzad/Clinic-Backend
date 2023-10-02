@@ -11,7 +11,7 @@ namespace Application.Repositories
     public class OdeljenjeRepository : IOdeljenjeRepository
     {
 
- private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         public OdeljenjeRepository(DataContext context, IMapper mapper, UserManager<AppUser> userManager)
@@ -27,12 +27,19 @@ namespace Application.Repositories
 
         public async Task DeleteOdeljenjeAsync(Guid id)
         {
-            var odeljenje = await  _context.Odeljenja.FindAsync(id);
+            var odeljenje = await _context.Odeljenja.FindAsync(id);
 
+            List<Pacijent> pacijenti = await _context.Pacijenti.Where(p => p.Odeljenje == odeljenje).ToListAsync();
+            List<AppUser> users = await _userManager.Users.Where(u => u.Odeljenje == odeljenje).ToListAsync();
+            List<Karton> kartoni = await _context.Kartoni.Where(k => pacijenti.Contains(k.Pacijent)).ToListAsync();
+
+            _context.RemoveRange(kartoni);
+            _context.RemoveRange(pacijenti);
+            _context.RemoveRange(users);
             _context.Remove(odeljenje);
         }
 
-        public async Task EditOdeljenje(Guid id,Odeljenje Odeljenje)
+        public async Task EditOdeljenje(Guid id, Odeljenje Odeljenje)
         {
             var odeljenje = await _context.Odeljenja.FindAsync(id);
             _mapper.Map(Odeljenje, odeljenje);
@@ -46,10 +53,10 @@ namespace Application.Repositories
 
         public async Task<Odeljenje> GetOdeljenje(Guid id)
         {
- 
-            Odeljenje odeljenje=await _context.Odeljenja.FindAsync(id);
 
-            return  odeljenje;
+            Odeljenje odeljenje = await _context.Odeljenja.FindAsync(id);
+
+            return odeljenje;
         }
     }
 }

@@ -7,6 +7,6 @@ namespace Application.Repositories
     {
         Task<List<UserGetDto>> GetUsers();
         Task<AppUser> GetUser(string id);
-        void AdminDeleteUser(string id);
+        Task AdminDeleteUser(string id);
     }
 }

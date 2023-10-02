@@ -87,8 +87,8 @@ namespace API.Controllers
 
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost("AdminCreateUser")]
-        [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             Guid guid=new Guid(registerDto.OdeljenjeId);
@@ -150,9 +150,8 @@ namespace API.Controllers
         }
 
 
-                [Authorize(Policy ="AdminOnly")]
+        [Authorize(Policy ="AdminOnly")]
         [HttpDelete("AdminDeleteUser")]
-        
         public async Task<IActionResult> AdminDelteUser(string id)
         {
             return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));
